@@ -26,7 +26,7 @@ python evaluate.py --dataset ruler --data_dir 4096 --model meta-llama/Llama-3.1-
     --press_name centrality_ppr_knorm --compression_ratio 0.75 --output_dir out
 ```
 `macro` = mean `string_match` over the 13 RULER subtasks in `metrics.json`. The committed board grid covers
-three ratios: 0.25 / 0.50 / 0.75.
+four ratios: 0.25 / 0.50 / 0.75 / 0.875.
 
 ## GraphKV comparison
 `python additional_benchmarks/run.py --dataset ruler --data_dir 4096 --model <m> --press_name graphkv_knorm

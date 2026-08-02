@@ -5,7 +5,7 @@ cd "$(dirname "$0")/../../evaluation"      # repo-root/evaluation
 PY="${PYTHON:-python}"
 OUT="${OUT:-./submission_results}"; mkdir -p "$OUT"
 M="${MODEL:-meta-llama/Llama-3.1-8B-Instruct}"
-for r in 0.25 0.50 0.75; do
+for r in 0.25 0.50 0.75 0.875; do
   echo ">>> llama c=$r $(date +%H:%M)"
   $PY evaluate.py --dataset ruler --data_dir 4096 --model "$M" \
     --press_name centrality_ppr_knorm --compression_ratio "$r" \
