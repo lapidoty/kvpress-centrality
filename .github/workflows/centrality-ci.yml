@@ -1,7 +1,7 @@
 name: appendix-ci
 on:
   push:
-    branches: [centrality-appendix]
+    branches: [main]
   pull_request:
 jobs:
   additional-benchmarks-tests:
