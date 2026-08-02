@@ -1,0 +1,23 @@
+dataset: ruler
+data_dir: '4096'
+model: /home/lapidoty/models/Llama-3.1-8B-Instruct
+device: cuda:0
+press_name: graphkv_knorm
+compression_ratio: 0.25
+key_channel_compression_ratio: null
+fraction: 0.06
+max_new_tokens: null
+max_context_length: null
+query_aware: false
+needle_depth: null
+compression_interval: null
+target_size: null
+hidden_states_buffer_size: null
+output_dir: /home/lapidoty/kv-dev/eval_results
+log_level: INFO
+model_kwargs:
+  dtype: bfloat16
+press_init_command: DecayPropagationPress(compression_ratio=0.25, base_press=KnormPress(compression_ratio=0.0),
+  num_rounds=1, top_k_sources=64, importance_temp=1.0, n_sink=4, recent_window=8)
+seed: 42
+fp8: false

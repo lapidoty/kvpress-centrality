@@ -1,0 +1,24 @@
+dataset: ruler
+data_dir: '4096'
+model: /home/lapidoty/models/Llama-3.1-8B-Instruct
+device: cuda:0
+press_name: centrality_ppr_knorm_d0.15
+compression_ratio: 0.5
+key_channel_compression_ratio: null
+fraction: 0.06
+max_new_tokens: null
+max_context_length: null
+query_aware: false
+needle_depth: null
+compression_interval: null
+target_size: null
+hidden_states_buffer_size: null
+output_dir: /home/lapidoty/kv-dev/eval_results
+log_level: INFO
+model_kwargs:
+  dtype: bfloat16
+press_init_command: CentralityPress(compression_ratio=0.5, base_press=KnormPress(compression_ratio=0.0),
+  num_iters=3, damping=0.15, teleport_temp=1.0, standardize_teleport=False, n_sink=4,
+  recent_window=8, similarity='shifted', use_pre_rope=False)
+seed: 42
+fp8: false

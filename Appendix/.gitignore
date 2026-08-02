@@ -1,0 +1,4 @@
+# The repo root .gitignore ignores results*/ ; re-include this project's committed run metadata
+# (config.yaml + metrics.json per run). predictions.csv is intentionally omitted (large) — see MANIFEST.md.
+!results/
+!results/**

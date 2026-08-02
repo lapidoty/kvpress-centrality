@@ -1,0 +1,15 @@
+#!/bin/bash
+# Qwen3-8B board grid: centrality_ppr_knorm_d0.15, ruler/4096, FULL fraction, flash_attention_2.
+cd /home/lapidoty/kvpress/evaluation
+source /home/lapidoty/kv-dev/cuda13_env.sh
+PY=/home/lapidoty/kv-dev/venv/bin/python
+OUT=/home/lapidoty/kv-dev/submission_results
+M=/home/lapidoty/models/Qwen3-8B
+for r in 0.25 0.50 0.75 0.875; do
+  echo ">>> qwen c=$r $(date +%H:%M)"
+  $PY evaluate.py --dataset ruler --data_dir 4096 --model "$M" \
+    --press_name centrality_ppr_knorm_d0.15 --compression_ratio "$r" \
+    --output_dir "$OUT" --device cuda:0 > "$OUT/grid_qwen_$r.log" 2>&1
+  echo "  rc=$?  attn=$(grep -oE 'flash_attention_2' "$OUT/grid_qwen_$r.log" | head -1)"
+done
+echo QWEN_GRID_DONE $(date +%H:%M)
