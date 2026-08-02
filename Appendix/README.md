@@ -2,8 +2,8 @@
 
 `CentralityPress` is a training-free KV-cache eviction scorer for NVIDIA kvpress: personalized-PageRank
 centrality over the key-similarity graph, anchored to a base press (`KnormPress`) through a teleport term.
-The shipped press is `kvpress/presses/centrality_press.py` (branch `feat/centrality-press`); this pack is
-the report, benchmarks, and reproduction material.
+The press ships in this repository at `kvpress/presses/centrality_press.py`; this directory holds the
+report, benchmarks, and reproduction material.
 
 ## Layout
 - `../report/` — `REPORT.md` (+ `.html`), `SUPPLEMENTARY`, `figures/`.
@@ -20,13 +20,13 @@ pip install -e .                       # kvpress + eval deps (see Dockerfile / r
 cd evaluation
 # fraction-0.06 screen (fast):
 python evaluate.py --dataset ruler --data_dir 4096 --model meta-llama/Llama-3.1-8B-Instruct \
-    --press_name centrality_ppr_knorm_d0.15 --compression_ratio 0.75 --fraction 0.06 --output_dir out
+    --press_name centrality_ppr_knorm --compression_ratio 0.75 --fraction 0.06 --output_dir out
 # board-grade (full fraction; flash_attention_2 auto-selected if flash-attn is installed):
 python evaluate.py --dataset ruler --data_dir 4096 --model meta-llama/Llama-3.1-8B-Instruct \
-    --press_name centrality_ppr_knorm_d0.15 --compression_ratio 0.75 --output_dir out
+    --press_name centrality_ppr_knorm --compression_ratio 0.75 --output_dir out
 ```
-`macro` = mean `string_match` over the 13 RULER subtasks in `metrics.json`. The board grid is these four
-ratios: 0.25 / 0.50 / 0.75 / 0.875.
+`macro` = mean `string_match` over the 13 RULER subtasks in `metrics.json`. The committed board grid covers
+three ratios: 0.25 / 0.50 / 0.75.
 
 ## GraphKV comparison
 `python additional_benchmarks/run.py --dataset ruler --data_dir 4096 --model <m> --press_name graphkv_knorm

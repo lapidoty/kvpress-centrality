@@ -1,7 +1,7 @@
 # MANIFEST — report numbers → run directories
 
 Every RULER number in the report is produced by kvpress's own `evaluation/evaluate.py` +
-`benchmarks/ruler/calculate_metrics.py` (no reimplemented scorer) and is traceable to a run directory
+`evaluation/benchmarks/ruler/calculate_metrics.py` (no reimplemented scorer) and is traceable to a run directory
 below (each holds `config.yaml` + `metrics.json`; large `predictions.csv` omitted — see note). `macro` is
 the unweighted mean over the 13 RULER subtasks (the leaderboard metric), at a **single** ratio.
 
@@ -25,7 +25,6 @@ the unweighted mean over the 13 RULER subtasks (the leaderboard metric), at a **
 | §4.1 repro | ppr_knorm d=0.15 @0.25 | 94.57 (vs screen 94.5) | `results/board_grid/…__centrality_ppr_knorm_d0.15__0.25` | 1.0 | flash_attention_2 |
 | §4.1 repro | ppr_knorm d=0.15 @0.75 | 58.04 (vs screen 58.3) | `results/board_grid/…__centrality_ppr_knorm_d0.15__0.75` | 1.0 | flash_attention_2 |
 | §4.1 repro | ppr_knorm d=0.15 @0.50 | 81.33 (vs screen 82.4) | `results/board_grid/…__0.50` | 1.0 | flash_attention_2 |
-| §4.1 repro | ppr_knorm d=0.15 @0.875 | _grid running — to be topped up_ | `results/board_grid/…__0.875` | 1.0 | flash_attention_2 |
 
 ## §4.7 — mechanism of the lift (fraction 0.25, sdpa)
 

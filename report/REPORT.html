@@ -1210,12 +1210,13 @@ classic outlier-eviction failure.</p>
 tasks; and an upstream kvpress leaderboard submission.</p>
 <hr />
 <p><em>Reproduction:</em> <code>Appendix/README.md</code> (env,
-commands), <code>scripts/sweep_ruler.py</code> +
-<code>scripts/sweep_longbench.py</code> (sweeps),
-<code>analysis/analyze_sweep.py</code> (paired stats),
-<code>results/</code> (per-example logs + summaries). The press lives in
-<code>kvpress/presses/centrality_press.py</code>; PR on branch
-<code>feat/centrality-press</code> (see
-<code>PR_DESCRIPTION.md</code>).</p>
+commands), <code>Appendix/scripts/ruler_rerun.py</code> +
+<code>Appendix/scripts/sweep_longbench.py</code> (sweeps),
+<code>Appendix/analysis/analyze_paired.py</code> (paired stats),
+<code>Appendix/results/</code> (per-run <code>config.yaml</code> +
+<code>metrics.json</code>). The press lives in
+<code>kvpress/presses/centrality_press.py</code>; see
+<code>Appendix/MANIFEST.md</code> for the number → run-directory
+map.</p>
 </body>
 </html>

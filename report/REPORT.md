@@ -569,7 +569,7 @@ RULER to expose the multi-hop/aggregation tasks; and an upstream kvpress leaderb
 
 ---
 
-*Reproduction:* `Appendix/README.md` (env, commands), `scripts/sweep_ruler.py` +
-`scripts/sweep_longbench.py` (sweeps), `analysis/analyze_sweep.py` (paired stats), `results/`
-(per-example logs + summaries). The press lives in `kvpress/presses/centrality_press.py`;
-PR on branch `feat/centrality-press` (see `PR_DESCRIPTION.md`).
+*Reproduction:* `Appendix/README.md` (env, commands), `Appendix/scripts/ruler_rerun.py` +
+`Appendix/scripts/sweep_longbench.py` (sweeps), `Appendix/analysis/analyze_paired.py` (paired stats),
+`Appendix/results/` (per-run `config.yaml` + `metrics.json`). The press lives in
+`kvpress/presses/centrality_press.py`; see `Appendix/MANIFEST.md` for the number → run-directory map.

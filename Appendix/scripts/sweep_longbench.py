@@ -5,7 +5,7 @@ Reconstruction from REPORT.md §4.2 (LongBench -- multi-hop QA, F1 %, n=210); th
 with devvm50213.
 
 What it does (faithful to REPORT.md §3.1/§3.2/§4.2):
-  * Presses: no_press, knorm, snapkv, centrality_ppr_knorm_d0.15 (the headline config), and
+  * Presses: no_press, knorm, snapkv, centrality_ppr_knorm (the headline config), and
     graphkv_knorm (the GraphKV suppression baseline, injected at runtime via DecayPropagationPress,
     exactly as in additional_benchmarks/run.py -- it is NOT part of the shipped registry).
   * Multi-hop subset: hotpotqa, 2wikimqa, musique (200 examples/task); pooled per-task sample at
@@ -48,7 +48,7 @@ DEFAULT_PRESSES = [
     "no_press",
     "knorm",
     "snapkv",
-    "centrality_ppr_knorm_d0.15",  # headline config (REPORT §4.2)
+    "centrality_ppr_knorm",  # headline config (REPORT §4.2)
     "graphkv_knorm",  # GraphKV suppression baseline (injected at runtime)
 ]
 DEFAULT_RATIOS = [0.5, 0.75]

@@ -40,10 +40,9 @@ cheaper than `graphkv` / SnapKV-based presses.*
 | 2wikimqa | 53.1 | 45.9 | 46.7 | 53.5 | 53.4 |
 | musique | 30.7 | 19.5 | 30.9 | 25.2 | 23.4 |
 
-Full per-example logs and all ratios/configs: `results/ruler_results_long.csv`,
-`results/longbench_results_long.csv`, `results/results_systems_bs8.csv`; regenerate figures with
-`analysis/make_figures.py` + `analysis/make_systems_figures.py` and stats with
-`analysis/analyze_sweep.py`.
+Per-run configs + metrics are under `Appendix/results/` (`config.yaml` + `metrics.json` each; the aggregated
+per-example `*_long.csv` are report-only — regenerable, see `Appendix/MANIFEST.md`). Regenerate figures with
+`analysis/make_figures.py` and paired stats with `analysis/analyze_paired.py`.
 
 ## S.3 Iso-accuracy operating-point curve (16k, batch 8)
 
@@ -57,7 +56,7 @@ target: the base press must keep ~69 % of the cache, ours only ~31 % — same ac
 
 ## Appendix — Code & data artifacts
 
-- **Press code (PR, branch `feat/centrality-press`):** `kvpress/presses/centrality_press.py`;
+- **Press code:** `kvpress/presses/centrality_press.py`;
   registration in `kvpress/__init__.py`, `evaluation/evaluate_registry.py`, `tests/default_presses.py`,
   `README.md`; unit test in `tests/presses/test_centrality_press.py`.
 - **GraphKV comparison baseline (`additional_benchmarks/`):** `decay_propagation_press.py`,
