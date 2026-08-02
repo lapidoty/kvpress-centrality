@@ -17,7 +17,6 @@ from kvpress.presses.composed_press import ComposedPress
 from kvpress.presses.compression_ratio_decoding_press import CompressionRatioDecodingPress
 from kvpress.presses.criticalkv_press import CriticalAdaKVPress, CriticalKVPress
 from kvpress.presses.cur_press import CURPress
-from kvpress.presses.decay_propagation_press import DecayPropagationPress
 from kvpress.presses.decoding_press import DecodingPress
 from kvpress.presses.dms_press import DMSPress
 from kvpress.presses.duo_attention_press import DuoAttentionPress
@@ -85,7 +84,6 @@ __all__ = [
     "ExpectedAttentionStatsPress",
     "CAMPress",
     "CentralityPress",
-    "DecayPropagationPress",
     "DecodingPress",
     "CompressionRatioDecodingPress",
     "PrefillDecodingPress",

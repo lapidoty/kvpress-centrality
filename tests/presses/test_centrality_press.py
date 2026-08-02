@@ -6,7 +6,6 @@ from dataclasses import dataclass
 import pytest
 import torch
 import torch.nn.functional as F
-from torch import nn
 from transformers import DynamicCache
 
 from kvpress.presses.centrality_press import CentralityPress
@@ -145,27 +144,22 @@ def test_peak_memory_scales_linearly():
     assert p2 < 3 * p1, f"peak memory grew super-linearly: {p1} -> {p2}"
 
 
-class _StubLlamaAttn(nn.Module):
-    """Minimal Llama-like attention module exposing what get_prerope_key_states needs."""
+def test_teleport_temp_controls_sharpness():
+    # teleport_temp is the softmax temperature over the base scores. At damping=0 the returned scores ARE
+    # the teleport p = softmax(base / teleport_temp), so its effective support (exp of its entropy) must
+    # SHRINK as the temperature shrinks. Guards the knob the report's tau (teleport-sharpness) analysis
+    # relies on -- without this, teleport_temp could silently regress to a no-op.
+    base = KnormPress()
+    keys = torch.randn(1, 1, 128, 16, generator=torch.Generator().manual_seed(0))
 
-    def __init__(self, hidden, n_kv, head_dim):
-        super().__init__()
-        self.k_proj = nn.Linear(hidden, n_kv * head_dim, bias=False)
-        self.head_dim = head_dim
+    def eff_support(temp):
+        p = CentralityPress(
+            base_press=base, damping=0.0, teleport_temp=temp, n_sink=0, recent_window=0, compression_ratio=0.5
+        ).score(None, None, keys, keys, None, {})[0, 0]
+        return torch.exp(-(p * (p + 1e-12).log()).sum())  # exp(entropy) = effective # of positions
 
-
-def test_use_pre_rope_with_stub_module():
-    torch.manual_seed(0)
-    B, S, hidden, n_kv, head_dim = 1, 24, 16, 2, 8
-    module = _StubLlamaAttn(hidden, n_kv, head_dim)
-    hidden_states = torch.randn(B, S, hidden)
-    keys = torch.randn(B, n_kv, S, head_dim)
-    kw = dict(base_press=None, damping=1.0, n_sink=0, recent_window=0, compression_ratio=0.5)
-    s_pre = CentralityPress(use_pre_rope=True, **kw).score(module, hidden_states, keys, keys, None, {})
-    s_post = CentralityPress(use_pre_rope=False, **kw).score(module, hidden_states, keys, keys, None, {})
-    assert s_pre.shape == (B, n_kv, S)
-    assert torch.isfinite(s_pre).all()
-    assert not torch.allclose(s_pre, s_post)  # the graph is actually built from pre-RoPE keys
+    sharp, mid, flat = eff_support(0.3), eff_support(1.0), eff_support(3.0)
+    assert sharp < mid < flat  # smaller temperature -> sharper teleport -> fewer effective positions
 
 
 def test_bf16_keys_scores_not_collapsed():

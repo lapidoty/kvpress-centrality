@@ -10,7 +10,6 @@ from torch import nn
 
 from kvpress.presses.knorm_press import KnormPress
 from kvpress.presses.scorer_press import ScorerPress
-from kvpress.utils import get_prerope_key_states
 
 
 @dataclass
@@ -61,11 +60,7 @@ class CentralityPress(ScorerPress):
     similarity : str, default="shifted"
         "shifted": (1 + cos) / 2 (low rank, non-negative, default -- recommended). "linear": raw cos
         (low rank), which can be negative and yields SIGNED, non-probability scores; for anti-correlated
-        clusters the kept side can be noise-dependent, so prefer "shifted". "relu": relu(cos), which
-        materializes S x S and is intended for short context only.
-    use_pre_rope : bool, default=False
-        Build the similarity graph from pre-RoPE keys (position removed from similarity) instead of
-        the post-RoPE cached keys. Requires a live module; keep False for isolated unit tests.
+        clusters the kept side can be noise-dependent, so prefer "shifted".
     """
 
     base_press: Optional[ScorerPress] = field(default_factory=KnormPress)
@@ -76,11 +71,10 @@ class CentralityPress(ScorerPress):
     n_sink: int = 4
     recent_window: int = 8
     similarity: str = "shifted"
-    use_pre_rope: bool = False
 
     def __post_init__(self):
         super().__post_init__()
-        assert self.similarity in ("shifted", "linear", "relu"), f"Unknown similarity: {self.similarity}"
+        assert self.similarity in ("shifted", "linear"), f"Unknown similarity: {self.similarity}"
         assert 0.0 <= self.damping <= 1.0, "damping must be in [0, 1]"
 
     def post_init_from_model(self, model):
@@ -90,10 +84,8 @@ class CentralityPress(ScorerPress):
 
     def _matvec(self, kn: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
         # kn: (B, H, S, D) L2-normalized keys ; c: (B, H, S, 1)
-        if self.similarity == "relu":
-            adjacency = torch.relu(kn @ kn.transpose(-1, -2))  # (B, H, S, S) -- short context only
-            return adjacency @ c
-        low_rank = kn @ (kn.transpose(-1, -2) @ c)  # O(S * D), never materializes S x S
+        # A @ c via the low-rank factorization -- O(S * head_dim), never materializes S x S.
+        low_rank = kn @ (kn.transpose(-1, -2) @ c)
         if self.similarity == "shifted":
             return 0.5 * c.sum(dim=-2, keepdim=True) + 0.5 * low_rank
         return low_rank  # "linear"
@@ -108,8 +100,7 @@ class CentralityPress(ScorerPress):
         kwargs,
     ) -> torch.Tensor:
         B, H, S, D = keys.shape
-        graph_keys = get_prerope_key_states(module, hidden_states) if self.use_pre_rope else keys
-        kn = F.normalize(graph_keys.float(), dim=-1, eps=1e-8)  # power iteration is unstable in bf16
+        kn = F.normalize(keys.float(), dim=-1, eps=1e-8)  # power iteration is unstable in bf16
 
         # Personalization / teleport distribution p : (B, H, S, 1)
         if self.base_press is not None:

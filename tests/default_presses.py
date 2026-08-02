@@ -8,7 +8,6 @@ from kvpress import (
     CentralityPress,
     CompactorPress,
     CURPress,
-    DecayPropagationPress,
     DuoAttentionPress,
     ExpectedAttentionPress,
     ExpectedAttentionStatsPress,
@@ -171,13 +170,6 @@ default_presses = [
     {"cls": TestLUKVPress, "kwargs": [{"compression_ratio": 0.5}, {"compression_ratio": 0.8}]},
     {
         "cls": CentralityPress,
-        "kwargs": [
-            {"base_press": KnormPress(), "compression_ratio": 0.2},
-            {"base_press": KnormPress(), "compression_ratio": 0.8},
-        ],
-    },
-    {
-        "cls": DecayPropagationPress,
         "kwargs": [
             {"base_press": KnormPress(), "compression_ratio": 0.2},
             {"base_press": KnormPress(), "compression_ratio": 0.8},
