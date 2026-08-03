@@ -60,5 +60,13 @@ is one command each in [`Appendix/README.md`](Appendix/README.md).
 
 ## This is a fork of NVIDIA/kvpress
 
-The upstream library — installation of the base package, the full press catalogue, the leaderboard — is
-unchanged. Its original README is preserved verbatim at [`UPSTREAM_README.md`](UPSTREAM_README.md).
+Everything except `CentralityPress` and this project's material is upstream and unchanged; GitHub's language
+bar and diffs de-emphasize it via `.gitattributes`.
+
+<details>
+<summary>Upstream kvpress README (preserved verbatim)</summary>
+
+The original NVIDIA/kvpress README — base install, the full press catalogue, the leaderboard — is kept
+verbatim at [`UPSTREAM_README.md`](UPSTREAM_README.md).
+
+</details>
