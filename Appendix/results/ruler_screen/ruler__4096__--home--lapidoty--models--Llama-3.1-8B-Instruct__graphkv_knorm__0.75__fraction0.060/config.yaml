@@ -1,6 +1,6 @@
 dataset: ruler
 data_dir: '4096'
-model: /home/lapidoty/models/Llama-3.1-8B-Instruct
+model: meta-llama/Llama-3.1-8B-Instruct
 device: cuda:0
 press_name: graphkv_knorm
 compression_ratio: 0.75

@@ -8,6 +8,12 @@ the unweighted mean over the 13 RULER subtasks (the leaderboard metric), at a **
 **Environment.** Runs on this devserver: 1×A100-80GB, Llama-3.1-8B-Instruct / Qwen3-8B, bf16.
 `fraction` and `attn` are given per row because they differ across runs.
 
+> **Model provenance.** `config.yaml` records the canonical Hugging Face id
+> `meta-llama/Llama-3.1-8B-Instruct`. On the authoring devserver the weights were loaded from a local
+> mirror at `/home/lapidoty/models/Llama-3.1-8B-Instruct` (the HF CDN is unreachable from that host and
+> the model is gated). Identical weights; only the label differs, and the canonical id is what the
+> kvpress leaderboard matches on.
+
 ## RULER — §4.1 headline screen (fraction 0.06, sdpa)
 
 | report | claim | macro | run directory | fraction | attn |
