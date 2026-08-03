@@ -120,6 +120,7 @@ Several presses inherit from `ScorerPress` ([source](kvpress/presses/scorer_pres
 - `KVzapPress` ([source](kvpress/presses/kvzap_press.py), [paper](https://arxiv.org/abs/2601.07891), [training](kvzap)): approximate KVzip+ using a fast surrogate model. To be used in conjunction with the `DMSPress`.
 - `FastKVzipPress` ([source](kvpress/presses/fastkvzip_press.py), [paper](https://arxiv.org/abs/2601.17668)): approximate KVzip through a lightweight gating mechanism.
 - `CapPress` ([source](kvpress/presses/cap_press.py), [paper](https://arxiv.org/abs/2604.25975)): evict tokens based on query-aware capacity scores from a log-determinant leverage proxy.
+- `CentralityPress` ([source](kvpress/presses/centrality_press.py)): personalized-PageRank centrality over the key-similarity graph — keep tokens that are directly important (teleport = a base `ScorerPress`'s scores) *or* connected to important tokens (structural reinforcement). Query-free and flash-attention compatible; the low-rank cosine kernel keeps it linear in sequence length. 🤖 automated agent contribution
 
 Some presses rely on a different logic:
 - `ThinKPress` ([source](kvpress/presses/think_press.py), [paper](https://arxiv.org/abs/2407.21018)): compress the dimensions of the keys based on the channel attention score on the last queries 

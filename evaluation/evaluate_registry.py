@@ -16,6 +16,7 @@ from kvpress import (
     AdaKVPress,
     BlockPress,
     CAMPress,
+    CentralityPress,
     ChunkKVPress,
     CompactorPress,
     ComposedPress,
@@ -117,6 +118,9 @@ PRESS_REGISTRY = {
     "cam_knorm": CAMPress(base_press=KnormPress()),
     "cam_adakv_snapkv": CAMPress(base_press=AdaKVPress(SnapKVPress())),
     "cam_tova": CAMPress(base_press=TOVAPress()),
+    # Personalized-PageRank centrality (reinforcement) -- keeps the corroborated core + supporting context
+    "centrality_ppr_knorm": CentralityPress(base_press=KnormPress(), damping=0.15),
+    "centrality_pure": CentralityPress(base_press=None, damping=1.0),  # pure centrality (failure-mode ablation)
     "decoding_knorm": DecodingPress(base_press=KnormPress()),
     "decoding_streaming_llm": DecodingPress(base_press=StreamingLLMPress()),
     "decoding_tova": DecodingPress(base_press=TOVAPress()),

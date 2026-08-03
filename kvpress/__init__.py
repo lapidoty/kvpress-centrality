@@ -9,6 +9,7 @@ from kvpress.presses.base_press import SUPPORTED_MODELS, BasePress
 from kvpress.presses.block_press import BlockPress
 from kvpress.presses.cam_press import CAMPress
 from kvpress.presses.cap_press import CapPress
+from kvpress.presses.centrality_press import CentralityPress
 from kvpress.presses.chunk_press import ChunkPress
 from kvpress.presses.chunkkv_press import ChunkKVPress
 from kvpress.presses.compactor_press import CompactorPress
@@ -82,6 +83,7 @@ __all__ = [
     "KVzipPress",
     "ExpectedAttentionStatsPress",
     "CAMPress",
+    "CentralityPress",
     "DecodingPress",
     "CompressionRatioDecodingPress",
     "PrefillDecodingPress",
