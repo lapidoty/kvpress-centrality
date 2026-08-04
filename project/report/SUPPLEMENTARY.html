@@ -312,11 +312,12 @@ compression 0.5 (F1 %)</h3>
 </tr>
 </tbody>
 </table>
-<p>Per-run configs + metrics are under <code>Appendix/results/</code>
-(<code>config.yaml</code> + <code>metrics.json</code> each; the
-aggregated per-example <code>*_long.csv</code> are report-only —
-regenerable, see <code>Appendix/MANIFEST.md</code>). Regenerate figures
-with <code>analysis/make_figures.py</code> and paired stats with
+<p>Per-run configs + metrics are under
+<code>project/reproduction/results/</code> (<code>config.yaml</code> +
+<code>metrics.json</code> each; the aggregated per-example
+<code>*_long.csv</code> are report-only — regenerable, see
+<code>project/reproduction/MANIFEST.md</code>). Regenerate figures with
+<code>analysis/make_figures.py</code> and paired stats with
 <code>analysis/analyze_paired.py</code>.</p>
 <h2 id="s.3-iso-accuracy-operating-point-curve-16k-batch-8">S.3
 Iso-accuracy operating-point curve (16k, batch 8)</h2>
@@ -340,11 +341,12 @@ artifacts</h2>
 <code>tests/default_presses.py</code>, <code>README.md</code>; unit test
 in <code>tests/presses/test_centrality_press.py</code>.</li>
 <li><strong>GraphKV comparison baseline
-(<code>additional_benchmarks/</code>):</strong>
+(<code>project/additional_benchmarks/</code>):</strong>
 <code>decay_propagation_press.py</code>,
 <code>test_decay_propagation_press.py</code>, <code>run.py</code>
 (runtime-injected registry entry), <code>README.md</code>.</li>
-<li><strong>Benchmark + analysis (<code>Appendix/</code>):</strong>
+<li><strong>Benchmark + analysis
+(<code>project/reproduction/</code>):</strong>
 <code>scripts/ruler_rerun.py</code>,
 <code>scripts/sweep_longbench.py</code>,
 <code>scripts/tau_sweep.sh</code>,
@@ -360,7 +362,8 @@ in <code>tests/presses/test_centrality_press.py</code>.</li>
 <code>analysis/rank_vs_board.py</code>,
 <code>analysis/teleport_entropy.py</code>,
 <code>analysis/kvpress_leaderboard_raw.csv</code>.</li>
-<li><strong>Data/logs (<code>Appendix/results/</code>):</strong>
+<li><strong>Data/logs
+(<code>project/reproduction/results/</code>):</strong>
 <code>board_grid/</code>, <code>ruler_screen/</code>, and
 <code>ablations/</code> run directories (each with
 <code>config.yaml</code> + <code>metrics.json</code>; large

@@ -17,7 +17,7 @@ COPY . /workspace
 # kvpress's pyproject: no-build-isolation-package = ["flash-attn"]).
 RUN pip3 install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cu124
 RUN pip3 install --no-cache-dir -e ".[eval]"   # eval extras required (rouge/jieba/fuzzywuzzy for LongBench)
-RUN pip3 install --no-cache-dir -r Appendix/requirements.txt
+RUN pip3 install --no-cache-dir -r project/reproduction/requirements.txt
 RUN pip3 install --no-cache-dir flash-attn --no-build-isolation
 
 CMD ["bash"]

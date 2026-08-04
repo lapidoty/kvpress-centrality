@@ -50,7 +50,7 @@ the unweighted mean over the 13 RULER subtasks (the leaderboard metric), at a **
 | §4.8 | `graphkv_knorm` @0.25/0.5/0.75 | 83.6/57.4/38.3 | `results/ruler_screen/…__graphkv_knorm__0.{25,50,75}__fraction0.060` |
 | §4.8 | ppr d=0.15 vs graphkv paired Δ | +12.3/+27.8/+21.8 | (paired over the ppr_knorm vs graphkv_knorm screen runs above) |
 
-The GraphKV benchmark code + a reproduction runner are in `additional_benchmarks/`.
+The GraphKV benchmark code + a reproduction runner are in `../additional_benchmarks/`.
 
 ## Cross-method ranks (§4.1)
 

@@ -14,12 +14,12 @@ the scoring linear in sequence length, so it drops into the existing kvpress eva
 
 | | |
 |---|---|
-| 📄 Report | [`report/REPORT.md`](report/REPORT.md) ([rendered](report/REPORT.html)) · supplementary in [`report/SUPPLEMENTARY.md`](report/SUPPLEMENTARY.md) |
-| 🔬 Reproduce | [`Appendix/README.md`](Appendix/README.md) — install, then one command per experiment |
-| 📊 Results | [`Appendix/results/`](Appendix/results/) — RULER runs, each with `config.yaml` + `metrics.json` |
-| 🗺️ Traceability | [`Appendix/MANIFEST.md`](Appendix/MANIFEST.md) — every reported number → the run that produced it |
+| 📄 Report | [**PDF**](project/report/REPORT.pdf) · [markdown](project/report/REPORT.md) · [rendered HTML](project/report/REPORT.html) · supplementary [PDF](project/report/SUPPLEMENTARY.pdf) / [`.md`](project/report/SUPPLEMENTARY.md) |
+| 🔬 Reproduce | [`project/reproduction/README.md`](project/reproduction/README.md) — install, then one command per experiment |
+| 📊 Results | [`project/reproduction/results/`](project/reproduction/results/) — RULER runs, each with `config.yaml` + `metrics.json` |
+| 🗺️ Traceability | [`project/reproduction/MANIFEST.md`](project/reproduction/MANIFEST.md) — every reported number → the run that produced it |
 | 🧩 The press | [`kvpress/presses/centrality_press.py`](kvpress/presses/centrality_press.py) |
-| 🆚 GraphKV comparison | [`additional_benchmarks/`](additional_benchmarks/) — the suppression baseline it is measured against |
+| 🆚 GraphKV comparison | [`project/additional_benchmarks/`](project/additional_benchmarks/) — the suppression baseline it is measured against |
 
 ## Headline result
 
@@ -34,18 +34,18 @@ RULER (4k context, Llama-3.1-8B-Instruct, 13-task macro `string_match`), fractio
 
 Double-digit macro gains at every ratio; at the hardest setting (0.75) centrality nearly **doubles** the
 base — 29.9 → 58.3 (~1.95×). Full-fraction, flash-attention board-grade runs reproduce the centrality
-column within ~1 point (94.6 / 81.3 / 58.0; see [`Appendix/results/board_grid/`](Appendix/results/board_grid/)).
+column within ~1 point (94.6 / 81.3 / 58.0; see [`project/reproduction/results/board_grid/`](project/reproduction/results/board_grid/)).
 The sensitivity analysis (damping, teleport temperature) and honest caveats are in the report.
 
 > **Scope.** The RULER numbers above are reproducible from the committed run configs. The LongBench,
 > systems, iso-accuracy, and attention-recall sections (§4.2 / 4.4 / 4.5 / 4.6) are report-only — their raw
 > data was lost with a prior machine; the scripts that produce them are included and marked as
-> reconstructions. See [`Appendix/MANIFEST.md`](Appendix/MANIFEST.md).
+> reconstructions. See [`project/reproduction/MANIFEST.md`](project/reproduction/MANIFEST.md).
 
 ## Quick start
 
 ```bash
-pip install -e .            # kvpress + eval deps (see Appendix/Dockerfile / Appendix/requirements.txt)
+pip install -e .            # kvpress + eval deps (see project/reproduction/Dockerfile / project/reproduction/requirements.txt)
 
 # reproduce the headline point (fraction-0.06 screen, ~30 examples/task — fast):
 cd evaluation
@@ -56,7 +56,7 @@ python evaluate.py --dataset ruler --data_dir 4096 \
 
 `macro` is the mean `string_match` over the 13 RULER subtasks in the run's `metrics.json`. The full
 experiment matrix — board-grade full-fraction runs, the τ / damping ablations, and the GraphKV comparison —
-is one command each in [`Appendix/README.md`](Appendix/README.md).
+is one command each in [`project/reproduction/README.md`](project/reproduction/README.md).
 
 ## This is a fork of NVIDIA/kvpress
 

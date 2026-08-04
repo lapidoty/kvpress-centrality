@@ -40,8 +40,8 @@ cheaper than `graphkv` / SnapKV-based presses.*
 | 2wikimqa | 53.1 | 45.9 | 46.7 | 53.5 | 53.4 |
 | musique | 30.7 | 19.5 | 30.9 | 25.2 | 23.4 |
 
-Per-run configs + metrics are under `Appendix/results/` (`config.yaml` + `metrics.json` each; the aggregated
-per-example `*_long.csv` are report-only — regenerable, see `Appendix/MANIFEST.md`). Regenerate figures with
+Per-run configs + metrics are under `project/reproduction/results/` (`config.yaml` + `metrics.json` each; the aggregated
+per-example `*_long.csv` are report-only — regenerable, see `project/reproduction/MANIFEST.md`). Regenerate figures with
 `analysis/make_figures.py` and paired stats with `analysis/analyze_paired.py`.
 
 ## S.3 Iso-accuracy operating-point curve (16k, batch 8)
@@ -59,15 +59,15 @@ target: the base press must keep ~69 % of the cache, ours only ~31 % — same ac
 - **Press code:** `kvpress/presses/centrality_press.py`;
   registration in `kvpress/__init__.py`, `evaluation/evaluate_registry.py`, `tests/default_presses.py`,
   `README.md`; unit test in `tests/presses/test_centrality_press.py`.
-- **GraphKV comparison baseline (`additional_benchmarks/`):** `decay_propagation_press.py`,
+- **GraphKV comparison baseline (`project/additional_benchmarks/`):** `decay_propagation_press.py`,
   `test_decay_propagation_press.py`, `run.py` (runtime-injected registry entry), `README.md`.
-- **Benchmark + analysis (`Appendix/`):** `scripts/ruler_rerun.py`, `scripts/sweep_longbench.py`,
+- **Benchmark + analysis (`project/reproduction/`):** `scripts/ruler_rerun.py`, `scripts/sweep_longbench.py`,
   `scripts/tau_sweep.sh`, `scripts/submission_grid_llama.sh`, `scripts/submission_grid_qwen.sh`,
   `scripts/fetch_eval_datasets.sh`, `scripts/eval_cfg_dec.yaml`; `analysis/analyze_paired.py`,
   `analysis/make_figures.py`, `analysis/speed_memory.py`, `analysis/iso_systems.py`,
   `analysis/recall_probe.py`, `analysis/rank_vs_board.py`, `analysis/teleport_entropy.py`,
   `analysis/kvpress_leaderboard_raw.csv`.
-- **Data/logs (`Appendix/results/`):** `board_grid/`, `ruler_screen/`, and `ablations/` run directories
+- **Data/logs (`project/reproduction/results/`):** `board_grid/`, `ruler_screen/`, and `ablations/` run directories
   (each with `config.yaml` + `metrics.json`; large `predictions.csv` omitted); figures in
   `report/figures/` (`fig1`–`fig12`).
 - **Reproducibility:** `requirements.txt`, `Dockerfile`, `README.md` (how-to-benchmark), `MANIFEST.md`

@@ -32,7 +32,7 @@ low centrality and is dropped (exactly the tokens `LeverageScorePress` deliberat
 therefore use **personalized PageRank**: centrality is anchored to a base press's importance scores
 via a teleport term, which keeps needles in and prevents collapse. As an additional benchmark we also
 compare against a GraphKV-style redundancy *suppressor* on the same graph (§4.8; code in
-`additional_benchmarks/`).
+`project/additional_benchmarks/`).
 
 **Contributions.** (1) `CentralityPress`, a training-free personalized-PageRank eviction scorer with an
 O(S·head_dim) low-rank kernel; (2) a paired, statistically-tested benchmark across RULER and LongBench,
@@ -457,7 +457,7 @@ The natural relational alternative to reinforcement is **suppression**: `Central
 *multiplicatively decays* each token by similarity to the top sources —
 `s_i = p_i·∏_{j≠i}(1 − relu·cos(kᵢ,kⱼ))` — keeping a spread-out, diverse set. We compare against it on the
 *same* base press and graph. It is a **comparison benchmark, not part of the shipped press**; its code,
-tests and a runtime-injection runner live in `additional_benchmarks/` (see that folder's `README.md`).
+tests and a runtime-injection runner live in `project/additional_benchmarks/` (see that folder's `README.md`).
 
 **Head-to-head — reinforcement wins overall** (paired per-example deltas of `ppr_knorm` d=0.15 vs
 `graphkv_knorm`; `*` = 95 % bootstrap CI excludes 0):
@@ -569,7 +569,7 @@ RULER to expose the multi-hop/aggregation tasks; and an upstream kvpress leaderb
 
 ---
 
-*Reproduction:* `Appendix/README.md` (env, commands), `Appendix/scripts/ruler_rerun.py` +
-`Appendix/scripts/sweep_longbench.py` (sweeps), `Appendix/analysis/analyze_paired.py` (paired stats),
-`Appendix/results/` (per-run `config.yaml` + `metrics.json`). The press lives in
-`kvpress/presses/centrality_press.py`; see `Appendix/MANIFEST.md` for the number → run-directory map.
+*Reproduction:* `project/reproduction/README.md` (env, commands), `project/reproduction/scripts/ruler_rerun.py` +
+`project/reproduction/scripts/sweep_longbench.py` (sweeps), `project/reproduction/analysis/analyze_paired.py` (paired stats),
+`project/reproduction/results/` (per-run `config.yaml` + `metrics.json`). The press lives in
+`kvpress/presses/centrality_press.py`; see `project/reproduction/MANIFEST.md` for the number → run-directory map.

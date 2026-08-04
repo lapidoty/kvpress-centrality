@@ -18,4 +18,4 @@ jobs:
           pip install -e . || pip install transformers
           pip install pytest pandas
       - name: GraphKV comparison-benchmark tests
-        run: python -m pytest -v additional_benchmarks/
+        run: python -m pytest -v project/additional_benchmarks/

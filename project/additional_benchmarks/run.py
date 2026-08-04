@@ -12,10 +12,12 @@ import os
 import runpy
 import sys
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)
-sys.path.insert(0, ROOT)
-sys.path.insert(0, os.path.join(ROOT, "evaluation"))
+HERE = os.path.dirname(os.path.abspath(__file__))   # project/additional_benchmarks
+PROJECT = os.path.dirname(HERE)                      # project/  (for the `additional_benchmarks` import)
+REPO = os.path.dirname(PROJECT)                      # repo root (for kvpress + evaluation/)
+sys.path.insert(0, PROJECT)
+sys.path.insert(0, REPO)
+sys.path.insert(0, os.path.join(REPO, "evaluation"))
 
 import evaluate_registry  # noqa: E402
 from kvpress import KnormPress, SnapKVPress  # noqa: E402
@@ -28,5 +30,5 @@ evaluate_registry.PRESS_REGISTRY.setdefault("graphkv_snapkv", DecayPropagationPr
 
 # evaluate.py is a Fire CLI that reads sys.argv and `from evaluate_registry import PRESS_REGISTRY`
 # (the already-patched module object). Run it from evaluation/ so its relative imports resolve.
-os.chdir(os.path.join(ROOT, "evaluation"))
+os.chdir(os.path.join(REPO, "evaluation"))
 runpy.run_path("evaluate.py", run_name="__main__")

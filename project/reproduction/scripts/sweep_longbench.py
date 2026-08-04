@@ -87,7 +87,7 @@ def configure_sys_path(repo_root: Path) -> None:
     evaluation/ on the path) and the GraphKV press lives in additional_benchmarks/ (needs the repo
     root on the path). Mirrors additional_benchmarks/run.py.
     """
-    for path in (str(repo_root / "evaluation"), str(repo_root)):
+    for path in (str(repo_root / "evaluation"), str(repo_root), str(repo_root / "project")):
         if path not in sys.path:
             sys.path.insert(0, path)
 
@@ -206,7 +206,7 @@ def evaluate_press_at_ratio(pipe, df, dataset2metric, press, ratio, tqdm, torch)
 def main() -> None:
     args = parse_args()
 
-    repo_root = Path(args.repo_root) if args.repo_root else Path(__file__).resolve().parent.parent
+    repo_root = Path(args.repo_root) if args.repo_root else Path(__file__).resolve().parents[3]
     configure_sys_path(repo_root)
 
     # Heavy / repo-local imports happen after sys.path is configured.
