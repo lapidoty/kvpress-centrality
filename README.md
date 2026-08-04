@@ -29,16 +29,16 @@ Where each requirement of the project brief is satisfied.
 |---|---|---|---|
 | **§2 Baseline** | 1-page justification, features, default eviction policy | [`reproduction/BASELINE.md`](project/reproduction/BASELINE.md) | ✅ |
 | **§3 Test suite** | workload profiles | [report](project/report/REPORT.pdf) §3.2 (RULER + LongBench) | ✅ |
-| | latency mean/p95/p99, memory, GPU util, throughput | [report](project/report/REPORT.pdf) §4.4 | ✅ |
-| | cache hit rate | [report](project/report/REPORT.pdf) §4.6 — attention-recall analog (justified: no cross-request cache) | ✅ |
+| | latency mean/p95/p99, memory, GPU util, throughput | [supplementary](project/report/SUPPLEMENTARY.pdf) §S.4 (systems), §S.5 (iso-accuracy) | ✅ |
+| | cache hit rate | [supplementary](project/report/SUPPLEMENTARY.pdf) §S.6 — attention-recall analog (justified: no cross-request cache) | ✅ |
 | | automation: scripts + CI | [`reproduction/scripts/`](project/reproduction/scripts/), [`centrality-ci.yml`](.github/workflows/centrality-ci.yml) | ✅ |
 | | README "how to benchmark" + sample logs | [`reproduction/README.md`](project/reproduction/README.md) + [results](project/reproduction/results/) (26 runs) | ✅ |
 | **§4 Extension** | code in feature branch + unit tests | [`add-centrality-press`](../../tree/add-centrality-press) branch, [`tests/`](tests/presses) | ✅ |
 | | API compat + tunable params documented | [report](project/report/REPORT.pdf) §2.1 | ✅ |
-| **§5 Evaluation** | vanilla vs extended, sweeps, plots, ablation | [report](project/report/REPORT.pdf) §4.1–4.8, damping/τ sweeps, ablation ladder §3.3 | ✅ |
+| **§5 Evaluation** | vanilla vs extended, sweeps, plots, ablation | [report](project/report/REPORT.pdf) §4.1–4.5, damping/τ sweeps, ablation ladder §3.3 | ✅ |
 | **§6 Reporting** | clean repo, README install+benchmark, Dockerfile | this README, [`reproduction/Dockerfile`](project/reproduction/Dockerfile) | ✅ |
 | | PDF structure: Intro→Design→Setup→Results→Discussion→Conclusion | [report](project/report/REPORT.pdf) §1–6 — exact match | ✅ |
-| | single PDF, 8–12 pages | [`REPORT.pdf`](project/report/REPORT.pdf) — 16pp (12 figures; fonts kept ≥10pt per the same brief rule, so not shrunk to fit) | ✅ |
+| | single PDF, 8–12 pages | [`REPORT.pdf`](project/report/REPORT.pdf) — 11pp; systems / iso-accuracy / attention-recall detail in the [supplementary](project/report/SUPPLEMENTARY.pdf) | ✅ |
 | **§7 Criteria** | correctness / reproducibility / performance / clarity | throughout | ✅ |
 
 ## Headline result
@@ -57,10 +57,10 @@ base — 29.9 → 58.3 (~1.95×). Full-fraction, flash-attention board-grade run
 column within ~1 point (94.6 / 81.3 / 58.0; see [`project/reproduction/results/board_grid/`](project/reproduction/results/board_grid/)).
 The sensitivity analysis (damping, teleport temperature) and honest caveats are in the report.
 
-> **Scope.** The RULER numbers above are reproducible from the committed run configs. The LongBench,
-> systems, iso-accuracy, and attention-recall sections (§4.2 / 4.4 / 4.5 / 4.6) are report-only — their raw
-> data was lost with a prior machine; the scripts that produce them are included and marked as
-> reconstructions. See [`project/reproduction/MANIFEST.md`](project/reproduction/MANIFEST.md).
+> **Scope.** The RULER numbers above are reproducible from the committed run configs. The LongBench
+> (report §4.2) and the systems / iso-accuracy / attention-recall analyses (supplementary §S.4–S.6) are
+> report-only — their raw data was lost with a prior machine; the scripts that produce them are included
+> and marked as reconstructions. See [`project/reproduction/MANIFEST.md`](project/reproduction/MANIFEST.md).
 
 ## Quick start
 
