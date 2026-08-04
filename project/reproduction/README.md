@@ -7,9 +7,9 @@ centrality over the key-similarity graph, anchored to `KnormPress` via a telepor
 ## Benchmark — one command
 ```bash
 pip install -e .                                       # kvpress + eval deps (pinned: Dockerfile / requirements.txt)
-bash project/reproduction/scripts/benchmark.sh        # RULER §4.1 + GraphKV §4.7 + LongBench §4.2, fraction 0.06 (fast)
+python project/reproduction/scripts/benchmark.py        # RULER §4.1 + GraphKV §4.7 + LongBench §4.2, fraction 0.06 (fast)
 ```
-(`MODEL=<hf-id> OUT=<dir> bash …/benchmark.sh` to override.) One command runs all the report's benchmarks:
+(`MODEL=<hf-id> OUT=<dir> python …/benchmark.py` to override.) One command runs all the report's benchmarks:
 `evaluate.py` for RULER accuracy (centrality vs `no_press`/`knorm`/`snapkv`/`centrality_pure`),
 `additional_benchmarks/run.py` for the GraphKV suppressor, and `sweep_longbench.py` for multi-hop QA.
 

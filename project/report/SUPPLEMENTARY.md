@@ -62,11 +62,11 @@ target: the base press must keep ~69 % of the cache, ours only ~31 %, same accur
 - **GraphKV comparison baseline (`project/additional_benchmarks/`):** `decay_propagation_press.py`,
   `test_decay_propagation_press.py`, `run.py` (runtime-injected registry entry), `README.md`.
 - **Benchmark + analysis (`project/reproduction/`):** `scripts/sweep_longbench.py`,
-  `scripts/submission_grid_llama.sh`, `scripts/fetch_eval_datasets.sh`; `analysis/analyze_paired.py`,
+  `scripts/submission_grid_llama.py`, `scripts/fetch_eval_datasets.py`; `analysis/analyze_paired.py`,
   `analysis/make_figures.py`, `analysis/speed_memory.py`, `analysis/iso_systems.py`,
   `analysis/recall_probe.py`, `analysis/rank_vs_board.py`, `analysis/kvpress_leaderboard_raw.csv`.
 - **Data/logs (`project/reproduction/results/`):** `board_grid/` (with `predictions.csv`) and `ruler_screen/`
   run directories (each with `config.yaml` + `metrics.json`); figures in `report/figures/` (`fig1`–`fig12`).
 - **Reproducibility:** `requirements.txt`, `Dockerfile`, `README.md` (how-to-benchmark + traceability),
-  `scripts/benchmark.sh` (one-command benchmark), `.github/workflows/centrality-ci.yml`
+  `scripts/benchmark.py` (one-command benchmark), `.github/workflows/centrality-ci.yml`
   (CI: comparison-benchmark tests on every push).
