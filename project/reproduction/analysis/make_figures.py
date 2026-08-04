@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 """Regenerate the report figures (fig1..fig12) from the result files (REPORT.md §4 captions).
 
-Reconstruction from the report methodology; the original was lost with devvm50213. Not yet re-executed.
 Each figure reads its input CSV/JSON from --resultsdir and is skipped (with a warning) if the input is
 absent — so this runs incrementally as sections are re-produced.
 

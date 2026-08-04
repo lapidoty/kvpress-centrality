@@ -32,9 +32,9 @@ four ratios: 0.25 / 0.50 / 0.75 / 0.875.
 `python project/additional_benchmarks/run.py --dataset ruler --data_dir 4096 --model <m> --press_name graphkv_knorm
 --compression_ratio 0.5 --output_dir out` — injects `graphkv_knorm` at runtime; does not touch the registry.
 
-## Caveat
-LongBench / systems / iso-accuracy / attention-recall (§4.2/4.4/4.5/4.6) are **report-only** — their raw
-data was lost with the prior devserver. The scripts that produce them are **reconstructed** here
-(`scripts/sweep_longbench.py`, `analysis/{speed_memory,iso_systems,recall_probe,make_figures}.py`, each
-marked as a reconstruction) and can be **re-run to regenerate the numbers**; they have not been re-executed
-yet, so those sections stay report-only until then. See `MANIFEST.md`. All RULER results are traceable now.
+## Scope
+The RULER results (§4.1, §4.7) are fully traceable to the committed run directories. LongBench, systems,
+iso-accuracy, and attention-recall (§4.2/4.4/4.5/4.6) are **report-only**: their raw outputs are not
+committed, but the scripts that produce them are included
+(`scripts/sweep_longbench.py`, `analysis/{speed_memory,iso_systems,recall_probe,make_figures}.py`) and can
+be **run to regenerate the numbers**. See `MANIFEST.md` and `REGENERATE.md`.

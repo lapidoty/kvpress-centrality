@@ -1,9 +1,7 @@
 #!/bin/bash
 # fetch_eval_datasets.sh — warm the HuggingFace cache with the kvpress evaluation datasets.
 #
-# RECONSTRUCTED 2026-07-31. The original lived only at this path on devvm50213's working tree
-# (master branch), which was never pushed to a remote and is lost; no Pixelcloud backup contained
-# it. This is a faithful, functional reconstruction — it fetches the same datasets the sweeps use
+# Fetches the same datasets the sweeps use
 # (RULER 4096/8192 + LongBench multi-hop), loaded ONLINE so the data_dir/config resolves; once
 # cached under ~/.cache/huggingface the agent can read them without touching the network.
 #

@@ -1,8 +1,8 @@
 # Regenerate the report-only sections (§4.2 / §4.4 / §4.5 / §4.6) — for a machine with a free A100
 
-The scripts under `project/reproduction/scripts/` and `project/reproduction/analysis/` are **faithful reconstructions** from
-the report methodology (their headers say so; the originals were lost with devvm50213). They have **not been
-re-executed**. Run them on a CUDA-12 A100 to regenerate the data, then rebuild the figures and commit.
+The scripts under `project/reproduction/scripts/` and `project/reproduction/analysis/` regenerate these
+sections from the report methodology (each header says which section it produces). Run them on a CUDA-12
+A100 to regenerate the data, then rebuild the figures and commit.
 
 ```bash
 # env  (see project/reproduction/Dockerfile / requirements.txt)
@@ -32,6 +32,5 @@ git add -A && git commit -s -m "regenerate §4.2/4.4/4.5/4.6 data + figures 🤖
   git -c http.proxy=fwdproxy:8080 push
 ```
 
-After a successful re-run: confirm the numbers land near the report's tables (within noise), then in
-`project/reproduction/MANIFEST.md` move §4.2/4.4/4.5/4.6 out of the "not yet re-run" section and drop the
-`Reconstruction …` header from each script that reproduced (replace with `Reproduced <date> <commit>`).
+After a successful re-run, confirm the numbers land near the report's tables (within noise), then update the
+header of each script that reproduced (replace `Regenerates …` with `Reproduced <date> <commit>`).

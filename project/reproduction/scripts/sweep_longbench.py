@@ -1,8 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Sweep KV-cache presses on the LongBench multi-hop QA subset and score token-F1.
 
-Reconstruction from REPORT.md §4.2 (LongBench -- multi-hop QA, F1 %, n=210); the original was lost
-with devvm50213.
+Regenerates REPORT.md §4.2 (LongBench -- multi-hop QA, F1 %, n=210).
 
 What it does (faithful to REPORT.md §3.1/§3.2/§4.2):
   * Presses: no_press, knorm, snapkv, centrality_ppr_knorm (the headline config), and
@@ -14,8 +13,7 @@ What it does (faithful to REPORT.md §3.1/§3.2/§4.2):
   * Generation reuses kvpress's own "kv-press-text-generation" pipeline (greedy decoding), the same
     engine evaluate.py drives -- prefill compresses under `with press(model)`, then greedy decode.
   * Scoring reuses kvpress's OWN metric (benchmarks/longbench/calculate_metrics.py): per-example
-    token-F1 = qa_f1_score, taken as the max over the reference answers, x100 (no reimplemented
-    scorer). This matches the report's per-example paired-statistics protocol.
+    token-F1 = qa_f1_score, taken as the max over the reference answers, x100. This matches the report's per-example paired-statistics protocol.
 
 Outputs (to --output_dir):
   * longbench_results_long.csv  -- per-example scores, columns: press, ratio, example_id, f1

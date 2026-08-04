@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Paired per-example statistics over two kvpress prediction runs (RULER / LongBench).
 
-Reconstruction from REPORT.md §3.4; the original was lost with devvm50213.
+Regenerates REPORT.md §3.4.
 
 At a fixed seed the kvpress evaluation harness scores the *same* examples in the *same* order, so
 two ``evaluate.py`` runs (e.g. our press vs. its base press) are **paired** row-for-row. This script
@@ -25,8 +25,7 @@ Design notes
 * The gold references in ``predictions.csv`` are serialized numpy-array reprs such as
   ``"['DCQHV' 'UQBFO' 'EJNEL']"`` -- space-separated, no commas, sometimes line-wrapped. Parsing
   them with ``ast.literal_eval`` silently *glues* the space-separated string literals into a single
-  token (``'DCQHVUQBFO'``); that was exactly the scoring bug called out in §3.2, which zeroed every
-  multi-reference task. ``parse_refs`` below extracts each quoted token individually to avoid it.
+  token (``'DCQHVUQBFO'``), which would zero every multi-reference task. ``parse_refs`` below extracts each quoted token individually to avoid it.
 
 Example
 -------

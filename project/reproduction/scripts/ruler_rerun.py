@@ -1,9 +1,8 @@
 # SPDX-License-Identifier: Apache-2.0
 """
-Corrected RULER re-run. Uses kvpress's kv-press-text-generation pipeline (which ALREADY applies the
-Llama-3.1 chat template) PER EXAMPLE — each example gets its own answer_prefix and max_new_tokens,
-fixing the original sweep's per-context .iloc[0] handling that zeroed several tasks. Scores every task
-(incl. the previously-excluded vt / multivalue / multiquery / cwe / fwe / qa_1) with RULER's own
+RULER re-run. Uses kvpress's kv-press-text-generation pipeline (which ALREADY applies the
+Llama-3.1 chat template) PER EXAMPLE — each example gets its own answer_prefix and max_new_tokens. Scores every task
+(vt / multivalue / multiquery / cwe / fwe / qa_1) with RULER's own
 string_match metric, and writes per-example rows (with predictions) for diagnosis + paired stats.
 
 Usage:

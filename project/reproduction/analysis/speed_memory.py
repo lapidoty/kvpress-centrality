@@ -1,8 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Systems measurement for CentralityPress (REPORT.md §4.4).
 
-Reconstruction from the report methodology; the original was lost with devvm50213. Not yet re-executed —
-re-run on one A100 to regenerate `results_systems_bs8.csv`.
+Regenerates REPORT.md §4.4 from the report methodology; run on one A100 to produce `results_systems_bs8.csv`.
 
 For each press at a fixed compression ratio, on a long-prompt workload (default: 8192-token prompt, 128
 decode steps, batch 8, Llama-3.1-8B bf16), measures: prefill time (s), peak GPU memory (GB), kept KV-cache

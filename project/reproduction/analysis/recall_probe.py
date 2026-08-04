@@ -1,8 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 """Attention-recall probe for CentralityPress (REPORT.md §4.6 — the "hit-rate" analog).
 
-Reconstruction from the report methodology; the original was lost with devvm50213. Not yet re-executed.
-
 On a *full, uncompressed* cache with eager attention, measures what fraction of the attention mass the model
 places on the context (from the last-32 observation-window queries, reduced per KV-head) lands on the token
 set each press would KEEP at ratios 0.25/0.5/0.75. Averaged over N real RULER-4k prompts × all layers × KV

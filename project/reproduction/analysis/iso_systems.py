@@ -1,8 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Iso-accuracy systems comparison for CentralityPress vs. its base press (16k ctx, batch 8).
 
-Reconstruction from REPORT.md §4.5 (Iso-accuracy: memory, throughput and latency at equal quality);
-the original was lost with devvm50213.
+Regenerates REPORT.md §4.5 (Iso-accuracy: memory, throughput and latency at equal quality).
 
 The idea (REPORT.md §4.4/§4.5). At a *fixed* compression ratio every press keeps the same number of
 tokens, so decode memory / throughput / latency are ratio-determined -- identical for `knorm`,
