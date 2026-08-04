@@ -84,13 +84,7 @@ never materializes the S×S graph:
 $$A c = 0.5 \sum c + 0.5 K_n (K_n^{\top} c) \quad \Rightarrow \quad O(S \cdot \text{head dim}) \text{ time and memory}$$
 
 The scorer is therefore **query-free, attention-free, flash-attention compatible, and linear in
-sequence length** (verified by a CUDA peak-memory unit test: doubling S ≈ doubles, not quadruples,
-peak memory). Iteration runs in fp32 (power iteration is unstable in bf16) and the fp32 scores are
-returned directly, downcasting to bf16 was found to collapse the ~1/S score band into ties and
-randomize the top-k, so we keep fp32 (top-k and gather are dtype-agnostic).
-
-A development option, `standardize_teleport`, z-scores the base scores before the softmax so the teleport
-is scale-invariant to the base press (needed for tiny-magnitude bases whose raw softmax is ~uniform).
+sequence length**.
 
 ---
 

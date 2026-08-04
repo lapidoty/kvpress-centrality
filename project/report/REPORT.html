@@ -272,17 +272,7 @@ strong press.</li>
 never materializes the S×S graph:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>c</mi><mo>=</mo><mn>0.5</mn><mo>∑</mo><mi>c</mi><mo>+</mo><mn>0.5</mn><msub><mi>K</mi><mi>n</mi></msub><mo stretchy="false" form="prefix">(</mo><msubsup><mi>K</mi><mi>n</mi><mi>⊤</mi></msubsup><mi>c</mi><mo stretchy="false" form="postfix">)</mo><mspace width="1.0em"></mspace><mo>⇒</mo><mspace width="1.0em"></mspace><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>S</mi><mo>⋅</mo><mtext mathvariant="normal">head dim</mtext><mo stretchy="false" form="postfix">)</mo><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> time and memory</mtext></mrow></mrow><annotation encoding="application/x-tex">A c = 0.5 \sum c + 0.5 K_n (K_n^{\top} c) \quad \Rightarrow \quad O(S \cdot \text{head dim}) \text{ time and memory}</annotation></semantics></math></p>
 <p>The scorer is therefore <strong>query-free, attention-free,
-flash-attention compatible, and linear in sequence length</strong>
-(verified by a CUDA peak-memory unit test: doubling S ≈ doubles, not
-quadruples, peak memory). Iteration runs in fp32 (power iteration is
-unstable in bf16) and the fp32 scores are returned directly, downcasting
-to bf16 was found to collapse the ~1/S score band into ties and
-randomize the top-k, so we keep fp32 (top-k and gather are
-dtype-agnostic).</p>
-<p>A development option, <code>standardize_teleport</code>, z-scores the
-base scores before the softmax so the teleport is scale-invariant to the
-base press (needed for tiny-magnitude bases whose raw softmax is
-~uniform).</p>
+flash-attention compatible, and linear in sequence length</strong>.</p>
 <hr />
 <h2 id="experimental-setup">3. Experimental setup</h2>
 <h3 id="model-hardware-environment">3.1 Model, hardware,
