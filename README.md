@@ -35,7 +35,7 @@ Where each requirement of the project brief is satisfied.
 | | README "how to benchmark" + sample logs | [`reproduction/README.md`](project/reproduction/README.md) + [results](project/reproduction/results/) (26 runs) | ✅ |
 | **§4 Extension** | code in feature branch + unit tests | [`add-centrality-press`](../../tree/add-centrality-press) branch, [`tests/`](tests/presses) | ✅ |
 | | API compat + tunable params documented | [report](project/report/REPORT.pdf) §2.1 | ✅ |
-| **§5 Evaluation** | vanilla vs extended, sweeps, plots, ablation | [report](project/report/REPORT.pdf) §4.1–4.5, damping/τ sweeps, ablation ladder §3.3 | ✅ |
+| **§5 Evaluation** | vanilla vs extended, sweeps, plots, ablation | [report](project/report/REPORT.pdf) §4.1–4.5, damping sweep, ablation ladder §3.3 | ✅ |
 | **§6 Reporting** | clean repo, README install+benchmark, Dockerfile | this README, [`reproduction/Dockerfile`](project/reproduction/Dockerfile) | ✅ |
 | | PDF structure: Intro→Design→Setup→Results→Discussion→Conclusion | [report](project/report/REPORT.pdf) §1–6, exact match | ✅ |
 | | single PDF, 8–12 pages | [`REPORT.pdf`](project/report/REPORT.pdf), 11pp with systems / iso-accuracy / attention-recall in §4.4-4.6 | ✅ |
@@ -75,8 +75,8 @@ python evaluate.py --dataset ruler --data_dir 4096 \
 ```
 
 `macro` is the mean `string_match` over the 13 RULER subtasks in the run's `metrics.json`. The full
-experiment matrix (board-grade full-fraction runs, the τ / damping ablations, and the GraphKV comparison)
-is one command each in [`project/reproduction/README.md`](project/reproduction/README.md).
+experiment matrix (board-grade full-fraction runs and the GraphKV comparison) is one command each in
+[`project/reproduction/README.md`](project/reproduction/README.md).
 
 ## This is a fork of NVIDIA/kvpress
 

@@ -144,13 +144,6 @@ floor recovering the base kept-set (with sink/window off), a GPU-gated peak-memo
 a *thesis test* (personalization keeps an outlier needle that pure centrality drops). The CPU subset
 runs in CI.
 
-### 3.4 Statistics
-
-Runs at a fixed seed evaluate the *same* examples, so comparisons are **paired**. For each press vs. a
-reference (base press / same-base GraphKV / `no_press`) we report the mean per-example score delta with
-a **bootstrap 95% CI** (10,000 resamples) and a **Wilcoxon signed-rank** p-value. `*` denotes a CI
-excluding 0.
-
 ---
 
 ## 4. Results
@@ -490,7 +483,7 @@ RULER to expose the multi-hop/aggregation tasks; and an upstream kvpress leaderb
 
 ---
 
-*Reproduction:* `project/reproduction/README.md` (env, commands), `project/reproduction/scripts/ruler_rerun.py` +
+*Reproduction:* `project/reproduction/README.md` (env, commands),
 `project/reproduction/scripts/sweep_longbench.py` (sweeps), `project/reproduction/analysis/analyze_paired.py` (paired stats),
 `project/reproduction/results/` (per-run `config.yaml` + `metrics.json`). The press lives in
 `kvpress/presses/centrality_press.py`; see `project/reproduction/MANIFEST.md` for the number → run-directory map.

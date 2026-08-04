@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Paired per-example statistics over two kvpress prediction runs (RULER / LongBench).
 
-Regenerates REPORT.md §3.4.
+Implements the paired per-example comparison (bootstrap CI + Wilcoxon).
 
 At a fixed seed the kvpress evaluation harness scores the *same* examples in the *same* order, so
 two ``evaluate.py`` runs (e.g. our press vs. its base press) are **paired** row-for-row. This script
@@ -12,7 +12,7 @@ loads two ``predictions.csv`` files, recomputes the per-example score with kvpre
   * a bootstrap 95% confidence interval (10,000 resamples), and
   * a Wilcoxon signed-rank p-value.
 
-Following §3.4, a comparison is flagged significant (``*``) iff the bootstrap CI excludes 0.
+A comparison is flagged significant (``*``) iff the bootstrap CI excludes 0.
 
 Design notes
 ------------
@@ -50,7 +50,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import wilcoxon
 
-# Pinned defaults from REPORT.md §3.4.
+# Pinned defaults (bootstrap CI + Wilcoxon).
 DEFAULT_N_BOOTSTRAP = 10_000
 DEFAULT_CI = 0.95
 DEFAULT_SEED = 42  # project seed; makes the bootstrap CI reproducible run-to-run
@@ -296,7 +296,7 @@ def _normalize_metric(metric: str) -> str:
 def main(argv: Sequence[str] | None = None) -> None:
     parser = argparse.ArgumentParser(
         description="Paired per-example statistics (bootstrap CI + Wilcoxon) over two kvpress "
-        "predictions.csv files. Reports A - B. See REPORT.md §3.4.",
+        "predictions.csv files. Reports A - B.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("--a", required=True, help="predictions.csv (or run dir) for method A")
@@ -336,7 +336,7 @@ def main(argv: Sequence[str] | None = None) -> None:
     mean_delta = float(np.mean(delta))
     ci_low, ci_high = bootstrap_ci(delta, args.n_bootstrap, args.ci, args.seed)
     w_stat, w_p = wilcoxon_signed_rank(scores_a, scores_b)
-    significant = bool(ci_low > 0.0 or ci_high < 0.0)  # §3.4: significant iff the CI excludes 0
+    significant = bool(ci_low > 0.0 or ci_high < 0.0)  # significant iff the CI excludes 0
     marker = "*" if significant else ""
 
     result = {

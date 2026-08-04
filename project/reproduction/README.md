@@ -9,9 +9,9 @@ report, benchmarks, and reproduction material.
 - `../report/` — `REPORT.md` (+ `.html`), `SUPPLEMENTARY`, `figures/`.
 - `MANIFEST.md` — **read first**: every report number → run directory, with `fraction` + `attn`.
 - `results/` — `config.yaml` + `metrics.json` per run: `board_grid/` (full-fraction FA2),
-  `ruler_screen/` (fraction-0.06 screen), `ablations/` (τ sweep, uniform, damping).
-- `scripts/` — the eval drivers used (`submission_grid_llama.sh`, `tau_sweep.sh`, `eval_cfg_dec.yaml`, …).
-- `analysis/` — `rank_vs_board.py` (matched-ratio board ranks), `teleport_entropy.py`.
+  `ruler_screen/` (fraction-0.06 screen).
+- `scripts/` — the eval drivers (`submission_grid_llama.sh`, `sweep_longbench.py`, `fetch_eval_datasets.sh`).
+- `analysis/` — `rank_vs_board.py` (matched-ratio board ranks) and the §4.2/4.4/4.5/4.6 regeneration scripts.
 - `../additional_benchmarks/` — the GraphKV suppression comparison (not part of the shipped press).
 
 ## Reproduce the RULER result (one A100)

@@ -1,9 +1,0 @@
-dataset: ruler
-data_dir: '4096'
-model: /home/lapidoty/models/Llama-3.1-8B-Instruct
-device: cuda:0
-fraction: 0.25
-output_dir: /home/lapidoty/kv-dev/decision_results
-model_kwargs:
-  dtype: bfloat16
-seed: 42
