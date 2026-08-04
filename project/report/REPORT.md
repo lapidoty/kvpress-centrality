@@ -2,7 +2,7 @@
 
 **An enhanced cache policy for NVIDIA kvpress.**
 
-[github.com/NVIDIA/kvpress](https://github.com/NVIDIA/kvpress) · [github.com/lapidoty/kvpress-centrality](https://github.com/lapidoty/kvpress-centrality)
+**Base:** [github.com/NVIDIA/kvpress](https://github.com/NVIDIA/kvpress) · **Our work:** [github.com/lapidoty/kvpress-centrality](https://github.com/lapidoty/kvpress-centrality)
 
 ---
 
