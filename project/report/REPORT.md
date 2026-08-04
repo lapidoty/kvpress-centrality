@@ -251,13 +251,13 @@ aggressive compression (0.75).*
 
 ### 4.3 Hypotheses
 
-We keep the handover's H2–H4 numbering (H1, a training-free centrality press is viable and
-O(S·head_dim) efficient, is established in §2–§3). **H2** (reinforcement vs. suppression on multi-hop)
-and **H3** (suppression vs. reinforcement on single-needle) concern the GraphKV comparison and are
-reported together in **§4.8**. Here:
+Two hypotheses are settled here; the two GraphKV-comparison hypotheses (H2, H3) are stated and tested
+in §4.8.
 
-- **H4 (pure centrality underperforms on retrieval): SUPPORTED strongly** (macro 10.4 at c=0.5, and 0 on
-  single-needle; worst everywhere, it evicts the outlier needle).
+- **H1 (a training-free centrality press is viable and O(S·head_dim) efficient):** established by
+  construction and the linear-kernel analysis in §2–§3.
+- **H4 (pure centrality underperforms on retrieval):** SUPPORTED strongly, macro 10.4 at c=0.5 and 0 on
+  single-needle, worst everywhere, because it evicts the outlier needle.
 
 ### 4.4 Systems: memory, latency, throughput, GPU utilization
 
@@ -442,7 +442,7 @@ Our press beats the suppressor on RULER at every ratio; on real multi-hop QA the
 compression** (+9.4\* at 0.75). It is also *cheaper*, the low-rank kernel adds +0.18 s prefill vs the
 suppressor's +0.38 s (§4.4 workload), at identical decode cost.
 
-**Two honest nuances** (the pre-registered H2/H3):
+**Hypotheses H2 and H3** (reinforcement vs. suppression), with honest nuances:
 
 - **H2 (reinforcement beats suppression on multi-hop): MIXED.** Supported on LongBench and RULER overall,
   but *refuted* on RULER's variable-tracking `vt`: at c=0.75 the suppressor wins (graphkv 100 vs ppr 93.1,
