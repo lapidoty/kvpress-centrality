@@ -1,4 +1,4 @@
-# CentralityPress — personalized-PageRank KV-cache eviction
+# CentralityPress: personalized-PageRank KV-cache eviction
 
 A training-free KV-cache eviction policy for [NVIDIA kvpress](https://github.com/NVIDIA/kvpress), developed
 as a fork (Apache-2.0). Everything except the new press and this project's material is upstream and
@@ -15,11 +15,11 @@ the scoring linear in sequence length, so it drops into the existing kvpress eva
 | | |
 |---|---|
 | 📄 Report | [**PDF**](project/report/REPORT.pdf) · [markdown](project/report/REPORT.md) · [rendered HTML](project/report/REPORT.html) · supplementary [PDF](project/report/SUPPLEMENTARY.pdf) / [`.md`](project/report/SUPPLEMENTARY.md) |
-| 🔬 Reproduce | [`project/reproduction/README.md`](project/reproduction/README.md) — install, then one command per experiment |
-| 📊 Results | [`project/reproduction/results/`](project/reproduction/results/) — RULER runs, each with `config.yaml` + `metrics.json` |
-| 🗺️ Traceability | [`project/reproduction/MANIFEST.md`](project/reproduction/MANIFEST.md) — every reported number → the run that produced it |
+| 🔬 Reproduce | [`project/reproduction/README.md`](project/reproduction/README.md): install, then one command per experiment |
+| 📊 Results | [`project/reproduction/results/`](project/reproduction/results/): RULER runs, each with `config.yaml` + `metrics.json` |
+| 🗺️ Traceability | [`project/reproduction/MANIFEST.md`](project/reproduction/MANIFEST.md): every reported number → the run that produced it |
 | 🧩 The press | [`kvpress/presses/centrality_press.py`](kvpress/presses/centrality_press.py) |
-| 🆚 GraphKV comparison | [`project/additional_benchmarks/`](project/additional_benchmarks/) — the suppression baseline it is measured against |
+| 🆚 GraphKV comparison | [`project/additional_benchmarks/`](project/additional_benchmarks/): the suppression baseline it is measured against |
 
 ## Submission guide (mapped to the project brief)
 
@@ -29,16 +29,16 @@ Where each requirement of the project brief is satisfied.
 |---|---|---|---|
 | **§2 Baseline** | 1-page justification, features, default eviction policy | [`reproduction/BASELINE.md`](project/reproduction/BASELINE.md) | ✅ |
 | **§3 Test suite** | workload profiles | [report](project/report/REPORT.pdf) §3.2 (RULER + LongBench) | ✅ |
-| | latency mean/p95/p99, memory, GPU util, throughput | [supplementary](project/report/SUPPLEMENTARY.pdf) §S.4 (systems), §S.5 (iso-accuracy) | ✅ |
-| | cache hit rate | [supplementary](project/report/SUPPLEMENTARY.pdf) §S.6 — attention-recall analog (justified: no cross-request cache) | ✅ |
+| | latency mean/p95/p99, memory, GPU util, throughput | [report](project/report/REPORT.pdf) §4.4 (systems), §4.5 (iso-accuracy) | ✅ |
+| | cache hit rate | [report](project/report/REPORT.pdf) §4.6, attention-recall analog (justified: no cross-request cache) | ✅ |
 | | automation: scripts + CI | [`reproduction/scripts/`](project/reproduction/scripts/), [`centrality-ci.yml`](.github/workflows/centrality-ci.yml) | ✅ |
 | | README "how to benchmark" + sample logs | [`reproduction/README.md`](project/reproduction/README.md) + [results](project/reproduction/results/) (26 runs) | ✅ |
 | **§4 Extension** | code in feature branch + unit tests | [`add-centrality-press`](../../tree/add-centrality-press) branch, [`tests/`](tests/presses) | ✅ |
 | | API compat + tunable params documented | [report](project/report/REPORT.pdf) §2.1 | ✅ |
 | **§5 Evaluation** | vanilla vs extended, sweeps, plots, ablation | [report](project/report/REPORT.pdf) §4.1–4.5, damping/τ sweeps, ablation ladder §3.3 | ✅ |
 | **§6 Reporting** | clean repo, README install+benchmark, Dockerfile | this README, [`reproduction/Dockerfile`](project/reproduction/Dockerfile) | ✅ |
-| | PDF structure: Intro→Design→Setup→Results→Discussion→Conclusion | [report](project/report/REPORT.pdf) §1–6 — exact match | ✅ |
-| | single PDF, 8–12 pages | [`REPORT.pdf`](project/report/REPORT.pdf) — 11pp; systems / iso-accuracy / attention-recall detail in the [supplementary](project/report/SUPPLEMENTARY.pdf) | ✅ |
+| | PDF structure: Intro→Design→Setup→Results→Discussion→Conclusion | [report](project/report/REPORT.pdf) §1–6, exact match | ✅ |
+| | single PDF, 8–12 pages | [`REPORT.pdf`](project/report/REPORT.pdf), 11pp with systems / iso-accuracy / attention-recall in §4.4-4.6 | ✅ |
 | **§7 Criteria** | correctness / reproducibility / performance / clarity | throughout | ✅ |
 
 ## Headline result
@@ -53,21 +53,21 @@ RULER (4k context, Llama-3.1-8B-Instruct, 13-task macro `string_match`), fractio
 | 0.75 | 29.9 | **58.3** (+28.4) |
 
 Double-digit macro gains at every ratio; at the hardest setting (0.75) centrality nearly **doubles** the
-base — 29.9 → 58.3 (~1.95×). Full-fraction, flash-attention board-grade runs reproduce the centrality
+base, 29.9 → 58.3 (~1.95×). Full-fraction, flash-attention board-grade runs reproduce the centrality
 column within ~1 point (94.6 / 81.3 / 58.0; see [`project/reproduction/results/board_grid/`](project/reproduction/results/board_grid/)).
 The sensitivity analysis (damping, teleport temperature) and honest caveats are in the report.
 
 > **Scope.** The RULER numbers above are reproducible from the committed run configs. The LongBench
-> (report §4.2) and the systems / iso-accuracy / attention-recall analyses (supplementary §S.4–S.6) are
-> report-only — their raw data was lost with a prior machine; the scripts that produce them are included
-> and marked as reconstructions. See [`project/reproduction/MANIFEST.md`](project/reproduction/MANIFEST.md).
+> (report §4.2) and the systems / iso-accuracy / attention-recall analyses (report §4.4-4.6) are reported
+> from the project's runs, with the scripts that regenerate them included. See
+> [`project/reproduction/MANIFEST.md`](project/reproduction/MANIFEST.md).
 
 ## Quick start
 
 ```bash
 pip install -e .            # kvpress + eval deps (see project/reproduction/Dockerfile / project/reproduction/requirements.txt)
 
-# reproduce the headline point (fraction-0.06 screen, ~30 examples/task — fast):
+# reproduce the headline point (fraction-0.06 screen, ~30 examples/task, fast):
 cd evaluation
 python evaluate.py --dataset ruler --data_dir 4096 \
     --model meta-llama/Llama-3.1-8B-Instruct \
@@ -75,7 +75,7 @@ python evaluate.py --dataset ruler --data_dir 4096 \
 ```
 
 `macro` is the mean `string_match` over the 13 RULER subtasks in the run's `metrics.json`. The full
-experiment matrix — board-grade full-fraction runs, the τ / damping ablations, and the GraphKV comparison —
+experiment matrix (board-grade full-fraction runs, the τ / damping ablations, and the GraphKV comparison)
 is one command each in [`project/reproduction/README.md`](project/reproduction/README.md).
 
 ## This is a fork of NVIDIA/kvpress
@@ -86,7 +86,7 @@ bar and diffs de-emphasize it via `.gitattributes`.
 <details>
 <summary>Upstream kvpress README (preserved verbatim)</summary>
 
-The original NVIDIA/kvpress README — base install, the full press catalogue, the leaderboard — is kept
+The original NVIDIA/kvpress README (base install, the full press catalogue, the leaderboard) is kept
 verbatim at [`UPSTREAM_README.md`](UPSTREAM_README.md).
 
 </details>
