@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build REPORT/SUPPLEMENTARY .pdf + .html from markdown via typst (LaTeX-quality math), tuned to ~10-11 pages.
+# Build REPORT/SUPPLEMENTARY .pdf from markdown via typst (LaTeX-quality math), tuned to ~10-11 pages.
 # Requires: pandoc >= 3, and `pip install typst pypandoc pypdf`.
 cd "$(dirname "$0")"
 python3 - <<'PY'
@@ -17,7 +17,6 @@ for doc in ("REPORT", "SUPPLEMENTARY"):
           .replace("fontsize: 11pt,", "fontsize: 10pt,").replace("width: 70.0%", "width: 55%"))
     open(f"{doc}.typ", "w", encoding="utf-8").write(s)
     typst.compile(f"{doc}.typ", output=f"{doc}.pdf")
-    subprocess.run([pandoc, f"{doc}.md", "-o", f"{doc}.html", "--standalone", "--embed-resources", "--mathml"], check=True)
     os.remove(f"{doc}.typ")
-print("built REPORT/SUPPLEMENTARY .pdf + .html")
+print("built REPORT/SUPPLEMENTARY .pdf")
 PY

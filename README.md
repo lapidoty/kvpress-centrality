@@ -14,7 +14,7 @@ the scoring linear in sequence length, so it drops into the existing kvpress eva
 
 | | |
 |---|---|
-| 📄 Report | [**PDF**](project/report/REPORT.pdf) · [markdown](project/report/REPORT.md) · [rendered HTML](project/report/REPORT.html) · supplementary [PDF](project/report/SUPPLEMENTARY.pdf) / [`.md`](project/report/SUPPLEMENTARY.md) |
+| 📄 Report | [**PDF**](project/report/REPORT.pdf) · [markdown](project/report/REPORT.md) · supplementary [PDF](project/report/SUPPLEMENTARY.pdf) / [`.md`](project/report/SUPPLEMENTARY.md) |
 | 🔬 Reproduce | [`project/reproduction/README.md`](project/reproduction/README.md): install, then one command per experiment |
 | 📊 Results | [`project/reproduction/results/`](project/reproduction/results/): RULER runs, each with `config.yaml` + `metrics.json` |
 | 🗺️ Traceability | [`project/reproduction/MANIFEST.md`](project/reproduction/MANIFEST.md): every reported number → the run that produced it |

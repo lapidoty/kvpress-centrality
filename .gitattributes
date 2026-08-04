@@ -5,4 +5,3 @@ kvzap/**        linguist-vendored
 notebooks/**    linguist-vendored
 tests/**        linguist-vendored
 kvpress/presses/centrality_press.py -linguist-vendored
-report/*.html linguist-generated

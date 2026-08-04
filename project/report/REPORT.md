@@ -102,9 +102,7 @@ sequence length**.
 
 - **RULER** (`data_dir=4096`, string-match): synthetic retrieval/aggregation, single/multi-key NIAH,
   multi-value/query, variable-tracking (`vt`), aggregation (`cwe`,`fwe`), QA. **All 13 tasks × 500
-  examples** are used; the headline
-  numbers screen at fraction 0.06 (~30/task), macro = mean over the 13 tasks. A full-fraction run is
-  required for any leaderboard-eligible number.
+  examples** are used.
 - **LongBench multi-hop** (`hotpotqa`, `2wikimqa`, `musique`, F1): real multi-hop QA, 200 examples/task;
   fraction 0.35 (n=210 total).
 
