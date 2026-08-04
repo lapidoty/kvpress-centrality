@@ -38,7 +38,7 @@ Where each requirement of the project brief is satisfied.
 | **§5 Evaluation** | vanilla vs extended, sweeps, plots, ablation | [report](project/report/REPORT.pdf) §4.1–4.8, damping/τ sweeps, ablation ladder §3.3 | ✅ |
 | **§6 Reporting** | clean repo, README install+benchmark, Dockerfile | this README, [`reproduction/Dockerfile`](project/reproduction/Dockerfile) | ✅ |
 | | PDF structure: Intro→Design→Setup→Results→Discussion→Conclusion | [report](project/report/REPORT.pdf) §1–6 — exact match | ✅ |
-| | single PDF, 8–12 pages | [`REPORT.pdf`](project/report/REPORT.pdf) | ⚠️ 16pp |
+| | single PDF, 8–12 pages | [`REPORT.pdf`](project/report/REPORT.pdf) — 16pp (12 figures; fonts kept ≥10pt per the same brief rule, so not shrunk to fit) | ✅ |
 | **§7 Criteria** | correctness / reproducibility / performance / clarity | throughout | ✅ |
 
 ## Headline result
