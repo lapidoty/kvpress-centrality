@@ -27,7 +27,7 @@ Where each requirement of the project brief is satisfied.
 
 | Brief section | Requirement | Where | Status |
 |---|---|---|---|
-| **§2 Baseline** | 1-page justification, features, default eviction policy | [`reproduction/BASELINE.md`](project/reproduction/BASELINE.md) | ✅ |
+| **§2 Baseline** | 1-page justification, features, default eviction policy | [`report/BASELINE.pdf`](project/report/BASELINE.pdf) ("Selection of Baseline Framework") | ✅ |
 | **§3 Test suite** | workload profiles | [report](project/report/REPORT.pdf) §3.2 (RULER + LongBench) | ✅ |
 | | latency mean/p95/p99, memory, GPU util, throughput | [report](project/report/REPORT.pdf) §4.4 (systems), §4.5 (iso-accuracy) | ✅ |
 | | cache hit rate | [report](project/report/REPORT.pdf) §4.6, attention-recall analog (justified: no cross-request cache) | ✅ |

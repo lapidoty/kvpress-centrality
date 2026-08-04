@@ -47,8 +47,7 @@ and the leverage-score family (`LeverageScorePress`/`CompactorPress`/`CURPress`)
 explicitly *keeps outliers*. The closest relational method is **GraphKV** (arXiv:2509.00388), which
 *removes* redundancy on the key graph. Our press is its *reinforcement* dual, it propagates importance
 along the graph, using a personalized-PageRank teleport to avoid the classic
-outlier-eviction and spectral-localization pathologies of raw eigenvector centrality. (A standalone one-page baseline justification, kvpress's
-features, default policy, and why it was chosen, is in `BASELINE.md`.)
+outlier-eviction and spectral-localization pathologies of raw eigenvector centrality.
 
 ---
 
