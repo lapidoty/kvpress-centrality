@@ -33,7 +33,7 @@ leading eigenvector piles onto the single densest cluster, keeping near-duplicat
 low centrality and is dropped (exactly the tokens `LeverageScorePress` deliberately keeps). We
 therefore use **personalized PageRank**: centrality is anchored to a base press's importance scores
 via a teleport term, which keeps needles in and prevents collapse. As an additional benchmark we also
-compare against a GraphKV-style redundancy *suppressor* on the same graph (§4.8; code in
+compare against a GraphKV-style redundancy *suppressor* on the same graph (§4.7; code in
 `project/additional_benchmarks/`).
 
 **Contributions.** (1) `CentralityPress`, a training-free personalized-PageRank eviction scorer with an
@@ -172,19 +172,11 @@ mean over all 13 tasks (the leaderboard metric). Every number in this section is
 | **`centrality_ppr_knorm` d=0.15** | **94.5** | **82.4** | **58.3** |
 | `centrality_pure` (d=1) | 28.2 | 10.4 | 5.1 |
 
-Paired per-example deltas for `d=0.15` (library `string_match`; `*` = 95 % bootstrap CI excludes 0):
-
-| vs. | c=0.25 | c=0.5 | c=0.75 |
-|---|---|---|---|
-| base `knorm` | +16.1\* | +29.5\* | +29.0\* |
-| `snapkv` | +12.4\* | +12.2\* | +18.2\* |
-
 On the full 13-task set, `centrality_ppr_knorm` d=0.15 **significantly beats its own base (`knorm`) and
-SnapKV at every compression ratio** (paired deltas above; the head-to-head vs the GraphKV suppressor is in
-§4.8), and at 25 % compression
+SnapKV at every compression ratio** (the head-to-head vs the GraphKV suppressor is in §4.7), and at 25 % compression
 nearly matches full cache (94.5 vs 95.25). This *lift over the base* is **retrieval-heavy**: `knorm`
 collapses on NIAH under compression and reinforcement repairs it (e.g. NIAH-multikey 13.1 → 69.4 at c=0.5).
-`damping=0` reproduces the base (floor); `damping ≥ 0.5` and pure centrality collapse (H4: pure = 28.2 /
+`damping=0` reproduces the base (floor); `damping ≥ 0.5` and pure centrality collapse (pure = 28.2 /
 10.4 / 5.1 macro).
 
 **Cross-method standing (verified against the board's raw data, matched model + matched ratio).** Using the
@@ -223,7 +215,7 @@ leaderboard-eligible comparison (see cross-method note).*
 ![Damping sweet spot](figures/fig2_damping_curve.png){width=70%}
 
 *Figure 2: Damping sweep at c=0.5. A shallow reinforcement (d≈0.15) peaks
-above the base press; as d→1 (pure centrality) it collapses (H4); d→0 recovers the base.*
+above the base press; as d→1 (pure centrality) it collapses; d→0 recovers the base.*
 
 ### 4.2 LongBench, multi-hop QA (F1 %, n=210)
 
@@ -234,15 +226,9 @@ above the base press; as d→1 (pure centrality) it collapses (H4); d→0 recove
 | `snapkv` | 45.1 | n/a |
 | **`centrality_ppr_knorm` d=0.15** | 42.0 | **39.9** |
 
-Paired deltas for `d=0.15`:
-
-| vs. | c=0.5 | c=0.75 |
-|---|---|---|
-| base `knorm` | +2.2 (ns) | **+8.1\*** (p=0.006) |
-
 On real multi-hop QA the reinforcement benefit **grows with compression**: at mild 0.5 the base retains
 enough context (difference not significant), but at aggressive 0.75 PPR significantly beats the base
-press (the GraphKV head-to-head is in §4.8).
+press (the GraphKV head-to-head is in §4.7).
 
 ![LongBench F1 vs compression](figures/fig3_longbench_f1.png){width=70%}
 
@@ -251,13 +237,9 @@ aggressive compression (0.75).*
 
 ### 4.3 Hypotheses
 
-Two hypotheses are settled here; the two GraphKV-comparison hypotheses (H2, H3) are stated and tested
-in §4.8.
-
-- **H1 (a training-free centrality press is viable and O(S·head_dim) efficient):** established by
-  construction and the linear-kernel analysis in §2–§3.
-- **H4 (pure centrality underperforms on retrieval):** SUPPORTED strongly, macro 10.4 at c=0.5 and 0 on
-  single-needle, worst everywhere, because it evicts the outlier needle.
+H1, that a training-free centrality press is viable and O(S·head_dim) efficient, is established by
+construction and the linear-kernel analysis in §2–§3. The reinforcement-vs-suppression hypotheses
+(H2, H3) are stated and tested in §4.7.
 
 ### 4.4 Systems: memory, latency, throughput, GPU utilization
 
@@ -282,7 +264,7 @@ Every press at r=0.5 uses the same 4096 MB / 35.1 GB and runs at ~the same laten
 (Figs S2–S3), memory and speed are functions of the *ratio*, not the policy. What differs is prefill
 overhead (Fig S1): **`ppr_knorm` (+0.18 s over `no_press`) is as cheap as `knorm` (+0.19 s)**, the
 low-rank kernel makes the PageRank iterations essentially free, and *cheaper* than every SnapKV-based
-press (+0.33–0.39 s, attention compute); its prefill edge over the GraphKV suppressor is noted in §4.8. Across the ratio
+press (+0.33–0.39 s, attention compute); its prefill edge over the GraphKV suppressor is noted in §4.7. Across the ratio
 sweep, peak memory falls **39.1 → 37.1 → 35.1 → 33.1 GB** and GPU utilization **75 → 64 → 56 → 45 %** as
 compression rises 0 → 0.75 (less attention compute per token), while decode throughput stays ~flat
 (~170–185 tok/s): at 8B/8k decode is weight-bound, so the latency/throughput benefit would grow at
@@ -397,31 +379,7 @@ outlier, so recall is the wrong objective for retrieval.*
 
 ---
 
-### 4.7 Scope and mechanism of the lift
-
-`CentralityPress` is a *wrapper*: its ceiling is the base press it re-scores. The headline pairs it with
-**Knorm**, a weak base. Two controlled follow-ups (both at c=0.75, library harness) characterize *why* the
-+28 over `knorm` appears.
-
-**The lift is real and governed by a single knob, teleport sharpness.** The teleport is
-`p = softmax(z?(base)/τ)`, where both standardization and τ set its sharpness. The headline uses
-`standardize_teleport=False, τ=1.0`. Turning standardization *on* flattens the teleport and drops the macro
-to 31.99, but re-sharpening with a smaller τ climbs monotonically back to the headline:
-
-| std=True teleport | τ=1.0 | τ=0.7 | τ=0.5 | τ=0.3 | std=False, τ=1.0 |
-|---|---|---|---|---|---|
-| macro at 0.75 | 31.99 | 53.05 | 55.56 | 57.49 | 58.27 |
-
-So `std=False` is simply `std=True` at a sharper τ: the +28 is *one legitimate knob*, with a stated
-calibration rule, **match teleport sharpness to the base's native score scale** (Knorm's large-magnitude
-`−‖k‖` scores are already sharp at τ=1; a tiny-magnitude base must be standardized first).
-
-
-**The base's importance signal is essential, not decorative.** Replacing the teleport with a *uniform* one
-at the same damping collapses to **5.44**, indistinguishable from pure centrality (5.13). Graph propagation
-alone cannot find the needle; it only reinforces a real importance signal.
-
-### 4.8 GraphKV comparison (additional benchmark)
+### 4.7 GraphKV comparison (additional benchmark)
 
 The natural relational alternative to reinforcement is **suppression**: `CentralityPress` *adds*
 `damping·A·c` to keep a corroborated core, whereas a GraphKV-style press (arXiv:2509.00388)
@@ -480,11 +438,6 @@ alone does not.
 localizes on the densest (most redundant) cluster, and the outlier needle, low centrality by
 construction, is evicted. `d≥0.5` and `pure` (d=1) collapse to near-zero on single-needle. The clean
 unimodal damping curve (base at d=0, peak at d≈0.15, collapse by d=0.5) is the method's empirical signature.
-The lift over the base is a *legitimate* effect: a τ sweep confirms it is governed by a single knob, 
-effective teleport sharpness, calibrated to the base's native score scale, not an artifact of the
-standardization flag (§4.7). The base's importance signal is essential throughout: a contentless (uniform)
-teleport collapses to
-pure-centrality levels.
 
 **Attention recall is the wrong target.** The presses with the *highest* attention recall (`snapkv`,
 `knorm`) are not the most accurate; ours wins with slightly *lower* recall (§4.6). Retrieval hinges on a
@@ -514,7 +467,7 @@ leaderboard-eligible version is the **full-fraction `flash_attention_2`** board-
 the screen (§4.1). (3) Absolute
 cross-method standing is modest (mid-pack on retrieval; a matched-ratio edge only on `fwe` aggregation);
 the large numbers are lifts *over the base press*, not over the field. (4) The LongBench gain at 0.5 is
-not significant, and H2 is mixed (refuted on RULER `vt`, §4.8); the method's value is clearest under
+not significant, and H2 is mixed (refuted on RULER `vt`, §4.7); the method's value is clearest under
 aggressive compression and on aggregation/corroboration. (5) All systems measurements use HuggingFace `transformers`; under a paged
 allocator (vLLM / PagedAttention) a page is reclaimed only when every slot in it is free, so scattered
 eviction would not free memory proportionally and the iso-accuracy memory saving would not transfer directly.
@@ -526,7 +479,7 @@ eviction would not free memory proportionally and the iso-accuracy memory saving
 A training-free personalized-PageRank eviction scorer, anchored to a cheap base press and using an
 O(S·head_dim) low-rank kernel, **significantly and consistently beats its base press** on RULER
 retrieval/corroboration (all ratios) and on LongBench multi-hop QA (under aggressive compression), and
-also beats a GraphKV-style suppression baseline (§4.8); a `damping=0` floor recovers the base press's
+also beats a GraphKV-style suppression baseline (§4.7); a `damping=0` floor recovers the base press's
 ranking (empirically within noise of the base, Δ≈0). It is a **ranked entry on the public KVPress
 leaderboard**, mid-pack overall, with a matched-ratio 1st on `fwe` aggregation (§4.1). At
 **iso-accuracy** it runs on **1.6×–4.5× less KV cache and ~13–16 % lower peak GPU memory** than the base
