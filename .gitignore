@@ -8,6 +8,10 @@ uv.lock
 # local-only report build helper (not part of the deliverable)
 project/report/build_pdf.sh
 
+# consolidated into project/reproduction/README.md (kept local, not part of the deliverable)
+project/reproduction/MANIFEST.md
+project/reproduction/REGENERATE.md
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

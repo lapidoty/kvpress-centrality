@@ -95,7 +95,7 @@ sequence length**.
   head_dim 128, the kvpress `evaluate.py` default.
 - **Hardware:** one NVIDIA A100-80GB.
 - **Stack:** Python 3.10, `torch==2.13.0+cu130`, `transformers==5.2.0`, `datasets==5.0.0`, kvpress
-  0.5.4. Pinned in `requirements-frozen.txt`; `Dockerfile` provided.
+  0.5.4. Pinned in `requirements.txt`; `Dockerfile` provided.
 
 ### 3.2 Benchmarks and metric
 
@@ -485,4 +485,4 @@ RULER to expose the multi-hop/aggregation tasks; and an upstream kvpress leaderb
 *Reproduction:* `project/reproduction/README.md` (env, commands),
 `project/reproduction/scripts/sweep_longbench.py` (sweeps), `project/reproduction/analysis/analyze_paired.py` (paired stats),
 `project/reproduction/results/` (per-run `config.yaml` + `metrics.json`). The press lives in
-`kvpress/presses/centrality_press.py`; see `project/reproduction/MANIFEST.md` for the number → run-directory map.
+`kvpress/presses/centrality_press.py`; see `project/reproduction/README.md` for the number → run-directory map.

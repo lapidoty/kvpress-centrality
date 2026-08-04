@@ -41,7 +41,7 @@ cheaper than `graphkv` / SnapKV-based presses.*
 | musique | 30.7 | 19.5 | 30.9 | 25.2 | 23.4 |
 
 Per-run configs + metrics are under `project/reproduction/results/` (`config.yaml` + `metrics.json` each; the aggregated
-per-example `*_long.csv` are report-only, regenerable, see `project/reproduction/MANIFEST.md`). Regenerate figures with
+per-example `*_long.csv` are report-only, regenerable, see `project/reproduction/README.md`). Regenerate figures with
 `analysis/make_figures.py` and paired stats with `analysis/analyze_paired.py`.
 
 ## S.3 Iso-accuracy operating-point curve (16k, batch 8)
@@ -67,6 +67,6 @@ target: the base press must keep ~69 % of the cache, ours only ~31 %, same accur
   `analysis/recall_probe.py`, `analysis/rank_vs_board.py`, `analysis/kvpress_leaderboard_raw.csv`.
 - **Data/logs (`project/reproduction/results/`):** `board_grid/` (with `predictions.csv`) and `ruler_screen/`
   run directories (each with `config.yaml` + `metrics.json`); figures in `report/figures/` (`fig1`–`fig12`).
-- **Reproducibility:** `requirements.txt`, `Dockerfile`, `README.md` (how-to-benchmark), `MANIFEST.md`
-  (report number → run dir), `BASELINE.md`, `REGENERATE.md`, `.github/workflows/centrality-ci.yml`
+- **Reproducibility:** `requirements.txt`, `Dockerfile`, `README.md` (how-to-benchmark + traceability),
+  `scripts/benchmark.sh` (one-command benchmark), `.github/workflows/centrality-ci.yml`
   (CI: comparison-benchmark tests on every push).

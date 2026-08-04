@@ -8,7 +8,7 @@ report, the reproduction pack, and the comparison baseline.
 | folder | what's in it |
 |---|---|
 | [`report/`](report/) | the report — [`REPORT.pdf`](report/REPORT.pdf) (+ markdown source), [`BASELINE.pdf`](report/BASELINE.pdf) ("Selection of Baseline Framework"), `SUPPLEMENTARY`, and `figures/` |
-| [`reproduction/`](reproduction/) | how to reproduce — baseline justification, `Dockerfile` + `requirements.txt`, run scripts, the committed RULER results, and [`MANIFEST.md`](reproduction/MANIFEST.md) mapping every report number to its run directory |
+| [`reproduction/`](reproduction/) | how to benchmark — one command ([`scripts/benchmark.sh`](reproduction/scripts/benchmark.sh)), `Dockerfile` + `requirements.txt`, and the committed RULER results (sample logs, traceable to their run directories) |
 | [`additional_benchmarks/`](additional_benchmarks/) | the GraphKV suppression baseline the press is compared against (report §4.7) |
 
 **Start here:** read [`report/REPORT.pdf`](report/REPORT.pdf). **To reproduce the headline result**, follow
