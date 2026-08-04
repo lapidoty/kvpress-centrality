@@ -4,6 +4,10 @@ reports/
 .DS_Store
 uv.lock
 *.parquet
+
+# local-only report build helper (not part of the deliverable)
+project/report/build_pdf.sh
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
