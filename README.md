@@ -21,6 +21,26 @@ the scoring linear in sequence length, so it drops into the existing kvpress eva
 | 🧩 The press | [`kvpress/presses/centrality_press.py`](kvpress/presses/centrality_press.py) |
 | 🆚 GraphKV comparison | [`project/additional_benchmarks/`](project/additional_benchmarks/) — the suppression baseline it is measured against |
 
+## Submission guide (mapped to the project brief)
+
+Where each requirement of the project brief is satisfied.
+
+| Brief section | Requirement | Where | Status |
+|---|---|---|---|
+| **§2 Baseline** | 1-page justification, features, default eviction policy | [`reproduction/BASELINE.md`](project/reproduction/BASELINE.md) | ✅ |
+| **§3 Test suite** | workload profiles | [report](project/report/REPORT.pdf) §3.2 (RULER + LongBench) | ✅ |
+| | latency mean/p95/p99, memory, GPU util, throughput | [report](project/report/REPORT.pdf) §4.4 | ✅ |
+| | cache hit rate | [report](project/report/REPORT.pdf) §4.6 — attention-recall analog (justified: no cross-request cache) | ✅ |
+| | automation: scripts + CI | [`reproduction/scripts/`](project/reproduction/scripts/), [`centrality-ci.yml`](.github/workflows/centrality-ci.yml) | ✅ |
+| | README "how to benchmark" + sample logs | [`reproduction/README.md`](project/reproduction/README.md) + [results](project/reproduction/results/) (26 runs) | ✅ |
+| **§4 Extension** | code in feature branch + unit tests | [`add-centrality-press`](../../tree/add-centrality-press) branch, [`tests/`](tests/presses) | ✅ |
+| | API compat + tunable params documented | [report](project/report/REPORT.pdf) §2.1 | ✅ |
+| **§5 Evaluation** | vanilla vs extended, sweeps, plots, ablation | [report](project/report/REPORT.pdf) §4.1–4.8, damping/τ sweeps, ablation ladder §3.3 | ✅ |
+| **§6 Reporting** | clean repo, README install+benchmark, Dockerfile | this README, [`reproduction/Dockerfile`](project/reproduction/Dockerfile) | ✅ |
+| | PDF structure: Intro→Design→Setup→Results→Discussion→Conclusion | [report](project/report/REPORT.pdf) §1–6 — exact match | ✅ |
+| | single PDF, 8–12 pages | [`REPORT.pdf`](project/report/REPORT.pdf) | ⚠️ 16pp |
+| **§7 Criteria** | correctness / reproducibility / performance / clarity | throughout | ✅ |
+
 ## Headline result
 
 RULER (4k context, Llama-3.1-8B-Instruct, 13-task macro `string_match`), fraction-0.06 screen
