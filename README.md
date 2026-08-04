@@ -14,32 +14,22 @@ the scoring linear in sequence length, so it drops into the existing kvpress eva
 
 | | |
 |---|---|
-| 📄 Report | [**PDF**](project/report/REPORT.pdf) · [markdown](project/report/REPORT.md) · supplementary [PDF](project/report/SUPPLEMENTARY.pdf) / [`.md`](project/report/SUPPLEMENTARY.md) |
-| 🔬 Reproduce | [`project/reproduction/README.md`](project/reproduction/README.md): install, then one command per experiment |
-| 📊 Results | [`project/reproduction/results/`](project/reproduction/results/): RULER runs, each with `config.yaml` + `metrics.json` |
-| 🗺️ Traceability | [`project/reproduction/results/`](project/reproduction/results/): every reported number → its run directory (naming convention in the reproduction README) |
-| 🧩 The press | [`kvpress/presses/centrality_press.py`](kvpress/presses/centrality_press.py) |
-| 🆚 GraphKV comparison | [`project/additional_benchmarks/`](project/additional_benchmarks/): the suppression baseline it is measured against |
+| 📄 Report | [**PDF**](project/report/REPORT.pdf) · [markdown](project/report/REPORT.md) · [baseline](project/report/BASELINE.pdf) · [supplementary](project/report/SUPPLEMENTARY.pdf) |
+| 🧩 Press | [`kvpress/presses/centrality_press.py`](kvpress/presses/centrality_press.py) |
+| 🔬 Reproduce | [`project/reproduction/`](project/reproduction/README.md): install, then one command |
+| 📊 Results | [`project/reproduction/results/`](project/reproduction/results/): per-run `config.yaml` + `metrics.json` (+ `predictions.csv`); the dir name maps each number to its run |
+| 🆚 GraphKV | [`project/additional_benchmarks/`](project/additional_benchmarks/): the suppression baseline |
 
-## Submission guide (mapped to the project brief)
+## Submission guide (project brief → where)
 
-Where each requirement of the project brief is satisfied.
-
-| Brief section | Requirement | Where | Status |
-|---|---|---|---|
-| **§2 Baseline** | 1-page justification, features, default eviction policy | [`report/BASELINE.pdf`](project/report/BASELINE.pdf) ("Selection of Baseline Framework") | ✅ |
-| **§3 Test suite** | workload profiles | [report](project/report/REPORT.pdf) §3.2 (RULER + LongBench) | ✅ |
-| | latency mean/p95/p99, memory, GPU util, throughput | [report](project/report/REPORT.pdf) §4.4 (systems), §4.5 (iso-accuracy) | ✅ |
-| | cache hit rate | [report](project/report/REPORT.pdf) §4.6, attention-recall analog (justified: no cross-request cache) | ✅ |
-| | automation: scripts + CI | [`reproduction/scripts/`](project/reproduction/scripts/), [`centrality-ci.yml`](.github/workflows/centrality-ci.yml) | ✅ |
-| | README "how to benchmark" + sample logs | [`reproduction/README.md`](project/reproduction/README.md) + [results](project/reproduction/results/) (20 runs) | ✅ |
-| **§4 Extension** | code in feature branch + unit tests | [`add-centrality-press`](../../tree/add-centrality-press) branch, [`tests/`](tests/presses) | ✅ |
-| | API compat + tunable params documented | [report](project/report/REPORT.pdf) §2.1 | ✅ |
-| **§5 Evaluation** | vanilla vs extended, sweeps, plots, ablation | [report](project/report/REPORT.pdf) §4.1–4.5, damping sweep, ablation ladder §3.3 | ✅ |
-| **§6 Reporting** | clean repo, README install+benchmark, Dockerfile | this README, [`reproduction/Dockerfile`](project/reproduction/Dockerfile) | ✅ |
-| | PDF structure: Intro→Design→Setup→Results→Discussion→Conclusion | [report](project/report/REPORT.pdf) §1–6, exact match | ✅ |
-| | single PDF, 8–12 pages | [`REPORT.pdf`](project/report/REPORT.pdf), 11pp with systems / iso-accuracy / attention-recall in §4.4-4.6 | ✅ |
-| **§7 Criteria** | correctness / reproducibility / performance / clarity | throughout | ✅ |
+| Brief section | Where |
+|---|---|
+| **§2** Baseline justification | [`report/BASELINE.pdf`](project/report/BASELINE.pdf) |
+| **§3** Test suite: workloads, latency/memory/throughput, hit-rate analog, scripts + CI | report §3.2, §4.4–4.6; [`reproduction/`](project/reproduction/) + [CI](.github/workflows/centrality-ci.yml) |
+| **§4** Extension: feature-branch code, unit tests, API/params | [`add-centrality-press`](../../tree/add-centrality-press) branch, [`tests/`](tests/presses); report §2.1 |
+| **§5** Evaluation: baseline vs extended, sweeps, ablation | report §4.1–4.5, ablation ladder §3.3 |
+| **§6** Reporting: clean repo, README + Dockerfile, 8–12pp PDF | this README, [`reproduction/Dockerfile`](project/reproduction/Dockerfile), [`REPORT.pdf`](project/report/REPORT.pdf) |
+| **§7** Criteria: correctness / reproducibility / performance / clarity | throughout |
 
 ## Headline result
 
