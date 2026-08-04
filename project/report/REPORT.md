@@ -130,8 +130,7 @@ over the (compressed) cache. We reuse kvpress's own metric functions, applied pe
 A task's accuracy is the mean × 100 over its examples; the headline **macro** is the mean over all 13
 tasks (the kvpress-leaderboard metric). **All results in §4.1 are produced by kvpress's own evaluation
 harness**, `evaluation/evaluate.py` drives generation and `benchmarks/ruler/calculate_metrics.py`
-scores it, with our press registered in `evaluate_registry.py`.. The paired statistics (§3.4) call the library's `string_match`
-per example on `evaluate.py`'s `predictions.csv`.
+scores it, with our press registered in `evaluate_registry.py`.
 
 ### 3.3 Presses, ablation ladder, and correctness
 
