@@ -9,7 +9,7 @@ report, the reproduction pack, and the comparison baseline.
 |---|---|
 | [`report/`](report/) | the report — [`REPORT.pdf`](report/REPORT.pdf) (+ markdown source), [`BASELINE.pdf`](report/BASELINE.pdf) ("Selection of Baseline Framework"), `SUPPLEMENTARY`, and `figures/` |
 | [`reproduction/`](reproduction/) | how to benchmark — one command ([`scripts/benchmark.py`](reproduction/scripts/benchmark.py)) after `pip install -e ".[eval]"`, and the committed RULER results (sample logs, traceable to their run directories) |
-| [`additional_benchmarks/`](additional_benchmarks/) | the GraphKV suppression baseline the press is compared against (report §4.6) |
+| [`additional_benchmarks/`](additional_benchmarks/) | the GraphKV suppression baseline the press is compared against (report §4.5) |
 
 **Start here:** read [`report/REPORT.pdf`](report/REPORT.pdf). **To reproduce the headline result**, follow
 [`reproduction/README.md`](reproduction/README.md) — one command reproduces the RULER numbers.

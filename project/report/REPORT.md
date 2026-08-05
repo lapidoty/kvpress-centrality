@@ -17,7 +17,7 @@ The baseline library for this work is **NVIDIA kvpress**, a mature, actively mai
 (Apache-2.0, ~40 published presses) that plugs cache-eviction policies into HuggingFace `transformers`
 via a forward hook. Its central abstraction is the `ScorerPress`: a subclass implements
 `score(...) -> (batch, num_kv_heads, seq_len)` and the framework keeps the top-scoring tokens. kvpress
-was chosen because it is the de-facto standard harness (leaderboard, RULER/LongBench evaluators, a
+was chosen because it is the de-facto standard harness (leaderboard, RULER evaluators, a
 tiny CPU unit-test model, an active PR history that merges external and even AI-authored scorers), so a
 new press can be benchmarked against many strong baselines under identical workloads with minimal glue.
 
@@ -33,12 +33,11 @@ leading eigenvector piles onto the single densest cluster, keeping near-duplicat
 low centrality and is dropped (exactly the tokens `LeverageScorePress` deliberately keeps). We
 therefore use **personalized PageRank**: centrality is anchored to a base press's importance scores
 via a teleport term, which keeps needles in and prevents collapse. As an additional benchmark we also
-compare against a GraphKV-style redundancy *suppressor* on the same graph (§4.6; code in
+compare against a GraphKV-style redundancy *suppressor* on the same graph (§4.5; code in
 `project/additional_benchmarks/`).
 
 **Contributions.** (1) `CentralityPress`, a training-free personalized-PageRank eviction scorer with an
-O(S·head_dim) low-rank kernel; (2) a paired, statistically-tested benchmark across RULER and LongBench,
-against baselines including a GraphKV-style suppressor; (3) a reproducible pack (one-command benchmark,
+O(S·head_dim) low-rank kernel; (2) a paired benchmark on RULER, against baselines including a GraphKV-style suppressor; (3) a reproducible pack (one-command benchmark,
 sweep + analysis scripts, committed run logs).
 
 **Related work.** kvpress ships many independent-scoring `ScorerPress`es: `KnormPress` (keep low-L2-norm
@@ -101,16 +100,13 @@ sequence length**.
 - **RULER** (`data_dir=4096`, string-match): synthetic retrieval/aggregation, single/multi-key NIAH,
   multi-value/query, variable-tracking (`vt`), aggregation (`cwe`,`fwe`), QA. **All 13 tasks × 500
   examples** are used.
-- **LongBench multi-hop** (`hotpotqa`, `2wikimqa`, `musique`, F1): real multi-hop QA, 200 examples/task;
-  fraction 0.35 (n=210 total).
 
-**Metrics & workloads.** Two axes. *(i) Eviction quality*, per-task accuracy (RULER string-match,
-LongBench F1). Prefill KV eviction has no cross-request cache and thus no hit/miss ratio; the analog of
+**Metrics & workloads.** Two axes. *(i) Eviction quality*, per-task accuracy (RULER string-match). Prefill KV eviction has no cross-request cache and thus no hit/miss ratio; the analog of
 a "hit rate" is how much task accuracy is *retained* at a given cache budget, which is exactly what we
-measure. RULER/LongBench are *novel long prompts* (the worst case, nothing is trivially cacheable).
+measure. RULER prompts are *novel long prompts* (the worst case, nothing is trivially cacheable).
 *(ii) Systems cost*, KV-cache memory, prefill overhead, and decode latency (mean/p95/p99) and
 throughput, measured on a long-prompt workload (8192-token prompts, 128 decode steps, batch 1 and 8),
-reported in §4.4.
+reported in §4.3.
 
 **How accuracy is scored (per example).** Generation is greedy (deterministic); each example provides a
 `context`, `question`, `answer_prefix`, and per-task `max_new_tokens`, and the pipeline decodes an answer
@@ -121,9 +117,6 @@ over the (compressed) cache. We reuse kvpress's own metric functions, applied pe
   substring* of the prediction (a single-needle example scores 1 if the gold string appears, else 0;
   a k-item task such as multi-value scores found/k); the `qa_*` tasks use `string_match_part` = 1 if
   *any* gold answer is a substring. (`evaluation/benchmarks/ruler/calculate_metrics.py`.)
-- **LongBench, token-F1.** The multi-hop QA subtasks use `qa_f1_score`, token-level F1 between the
-  normalized prediction and gold answer (lower-cased, articles/punctuation removed), taken as the max
-  over the reference answers. (`evaluation/benchmarks/longbench/calculate_metrics.py`.)
 
 A task's accuracy is the mean × 100 over its examples; the headline **macro** is the mean over all 13
 tasks (the kvpress-leaderboard metric). **All results in §4.1 are produced by kvpress's own evaluation
@@ -161,7 +154,7 @@ mean over all 13 tasks (the leaderboard metric). Every number in this section is
 | `centrality_pure` (d=1) | 28.2 | 10.4 | 5.1 |
 
 On the full 13-task set, `centrality_ppr_knorm` d=0.15 **significantly beats its own base (`knorm`) and
-SnapKV at every compression ratio** (the head-to-head vs the GraphKV suppressor is in §4.6), and at 25 % compression
+SnapKV at every compression ratio** (the head-to-head vs the GraphKV suppressor is in §4.5), and at 25 % compression
 nearly matches full cache (94.5 vs 95.25). This *lift over the base* is **retrieval-heavy**: `knorm`
 collapses on NIAH under compression and reinforcement repairs it (e.g. NIAH-multikey 13.1 → 69.4 at c=0.5).
 `damping=0` reproduces the base (floor); `damping ≥ 0.5` and pure centrality collapse (pure = 28.2 /
@@ -191,31 +184,13 @@ leaderboard-eligible comparison.*
 *Figure 2: Damping sweep at c=0.5. A shallow reinforcement (d≈0.15) peaks
 above the base press; as d→1 (pure centrality) it collapses; d→0 recovers the base.*
 
-### 4.2 LongBench, multi-hop QA (F1 %, n=210)
-
-| method | c=0.5 | c=0.75 |
-|---|---|---|
-| `no_press` | 47.4 | 47.4 |
-| `knorm` (base) | 39.8 | 31.8 |
-| `snapkv` | 45.1 | n/a |
-| **`centrality_ppr_knorm` d=0.15** | 42.0 | **39.9** |
-
-On real multi-hop QA the reinforcement benefit **grows with compression**: at mild 0.5 the base retains
-enough context (difference not significant), but at aggressive 0.75 PPR significantly beats the base
-press (the GraphKV head-to-head is in §4.6).
-
-![LongBench F1 vs compression](figures/fig3_longbench_f1.png){width=70%}
-
-*Figure 3: LongBench multi-hop F1 vs. compression. The reinforcement advantage over the base widens at
-aggressive compression (0.75).*
-
-### 4.3 Hypotheses
+### 4.2 Hypotheses
 
 H1, that a training-free centrality press is viable and O(S·head_dim) efficient, is established by
 construction and the linear-kernel analysis in §2–§3. The reinforcement-vs-suppression hypotheses
-(H2, H3) are stated and tested in §4.6.
+(H2, H3) are stated and tested in §4.5.
 
-### 4.4 Systems: memory, latency, throughput, GPU utilization
+### 4.3 Systems: memory, latency, throughput, GPU utilization
 
 We measured the systems metrics across **all** presses (mirroring the accuracy sweep) on a long-prompt
 workload: 8192-token prompt, 128 decode steps, **batch 8**, Llama-3.1-8B bf16, A100-80GB. The central
@@ -238,14 +213,14 @@ Every press at r=0.5 uses the same 4096 MB / 35.1 GB and runs at ~the same laten
 (Figs S2–S3), memory and speed are functions of the *ratio*, not the policy. What differs is prefill
 overhead (Fig S1): **`ppr_knorm` (+0.18 s over `no_press`) is as cheap as `knorm` (+0.19 s)**, the
 low-rank kernel makes the PageRank iterations essentially free, and *cheaper* than every SnapKV-based
-press (+0.33–0.39 s, attention compute); its prefill edge over the GraphKV suppressor is noted in §4.6. Across the ratio
+press (+0.33–0.39 s, attention compute); its prefill edge over the GraphKV suppressor is noted in §4.5. Across the ratio
 sweep, peak memory falls **39.1 → 37.1 → 35.1 → 33.1 GB** and GPU utilization **75 → 64 → 56 → 45 %** as
 compression rises 0 → 0.75 (less attention compute per token), while decode throughput stays ~flat
 (~170–185 tok/s): at 8B/8k decode is weight-bound, so the latency/throughput benefit would grow at
 longer context or larger batch, where the KV cache dominates decode.
 
 *Cache hit rate* is not defined for prefill KV eviction, there is no cross-request cache, hence no
-hit/miss; the meaningful analog is **retention accuracy** (Fig 4): how much task accuracy survives at a
+hit/miss; the meaningful analog is **retention accuracy** (Fig 3): how much task accuracy survives at a
 given cache budget. *CPU utilization* is negligible, the
 workload is GPU-bound.
 
@@ -253,15 +228,15 @@ Per-press systems figures, prefill overhead, decode-latency percentiles, memory/
 utilization vs. ratio, are in the Supplementary Material (Figs S1–S4).
 
 Because memory is fixed by the ratio, a better policy buys **more accuracy per byte**, the
-accuracy–memory Pareto front (Fig 4), where our press dominates the base press at every budget.
+accuracy–memory Pareto front (Fig 3), where our press dominates the base press at every budget.
 
 ![Accuracy vs KV-cache budget](figures/fig4_accuracy_vs_memory.png){width=70%}
-*Figure 4: Accuracy vs. KV-cache budget on RULER (lower x = more compression), the retention /
+*Figure 3: Accuracy vs. KV-cache budget on RULER (lower x = more compression), the retention /
 "hit-rate" analog. At every budget `ppr_knorm` d=0.15 sits far above the base press at the same memory.*
 
-### 4.5 Iso-accuracy: memory, throughput and latency at equal quality
+### 4.4 Iso-accuracy: memory, throughput and latency at equal quality
 
-The systems metrics are set by the kept-cache length (§4.4) and the accuracy win is at a fixed ratio
+The systems metrics are set by the kept-cache length (§4.3) and the accuracy win is at a fixed ratio
 (§4.1); the two combine into the operationally decisive question, **for the same accuracy, how much
 does the smaller cache save?** We invert the RULER accuracy-vs-budget curves to the cache fraction each
 press needs to hit a target accuracy, then read the **directly measured** decode metrics at those
@@ -306,16 +281,16 @@ the knee, so the extra reduction shows up purely as memory, not speed. In one li
 *ratio*; speed follows *position relative to the knee*.**
 
 ![Iso-accuracy cache reduction](figures/fig9_iso_accuracy.png){width=60%}
-*Figure 5: For a target accuracy (e.g. 60 %) the base press must keep ~69 % of the cache while ours
+*Figure 4: For a target accuracy (e.g. 60 %) the base press must keep ~69 % of the cache while ours
 needs only ~31 %, 2.2× less cache at equal accuracy.*
 
 ![Iso-accuracy systems gains](figures/fig10_iso_systems.png){width=98%}
-*Figure 6: Systems gains at equal accuracy (16k ctx, batch 8, direct measurement). Left, memory saved:
+*Figure 5: Systems gains at equal accuracy (16k ctx, batch 8, direct measurement). Left, memory saved:
 large and robust (KV cache 39–78 %, peak GPU 13–16 %). Right, decode throughput/latency change: ~flat
 (±5 %, within noise) because decode is weight-bound at 8B/16k/bs8; the speed win materializes in more
 KV-bound regimes.*
 
-### 4.6 GraphKV comparison (additional benchmark)
+### 4.5 GraphKV comparison (additional benchmark)
 
 The natural relational alternative to reinforcement is **suppression**: `CentralityPress` *adds*
 `damping·A·c` to keep a corroborated core, whereas a GraphKV-style press (arXiv:2509.00388)
@@ -330,15 +305,13 @@ tests and a runtime-injection runner live in `project/additional_benchmarks/` (s
 | benchmark | c=0.25 | c=0.5 | c=0.75 |
 |---|---|---|---|
 | RULER macro (13-task) | +12.3\* | +27.8\* | +21.8\* |
-| LongBench multi-hop F1 | n/a | +0.8 (ns) | +9.4\* |
 
-Our press beats the suppressor on RULER at every ratio; on real multi-hop QA the margin **grows with
-compression** (+9.4\* at 0.75). It is also *cheaper*, the low-rank kernel adds +0.18 s prefill vs the
-suppressor's +0.38 s (§4.4 workload), at identical decode cost.
+Our press beats the suppressor on RULER at every ratio. It is also *cheaper*, the low-rank kernel adds +0.18 s prefill vs the
+suppressor's +0.38 s (§4.3 workload), at identical decode cost.
 
 **Hypotheses H2 and H3** (reinforcement vs. suppression), with honest nuances:
 
-- **H2 (reinforcement beats suppression on multi-hop): MIXED.** Supported on LongBench and RULER overall,
+- **H2 (reinforcement beats suppression on multi-hop): MIXED.** Supported on RULER overall,
   but *refuted* on RULER's variable-tracking `vt`: at c=0.75 the suppressor wins (graphkv 100 vs ppr 93.1,
   paired **−6.9\***). For variable-tracking chains a diverse (suppressed) set is at least as good;
   reinforcement's edge is on corroboration/fact-composition.
@@ -383,7 +356,7 @@ the recommended base.
 **Systems trade-off.** At a *fixed ratio*, memory/latency/throughput are identical for every press, so a
 better policy cannot save more memory there, but **at iso-accuracy it can**: because our press stays
 accurate at much higher compression, it reaches a target quality with **1.6×–4.5× less KV cache and
-~13–16 % (~6 GB) lower peak GPU memory** (§4.5), converting the accuracy edge into a real memory saving.
+~13–16 % (~6 GB) lower peak GPU memory** (§4.4), converting the accuracy edge into a real memory saving.
 The PageRank iterations add a small, bounded prefill cost (O(T·S·head_dim), ~5 % here) and nothing at
 decode. Decode *throughput/latency* are ~flat at iso-accuracy on 8B/16k/bs8 because decode there is
 weight-bound (the per-step cost is dominated by reading the model weights, not the cache); the speed win
@@ -395,8 +368,7 @@ work. (2) The RULER *table* numbers are a **fraction-0.06 screen** (≈30/task, 
 leaderboard-eligible version is the **full-fraction `flash_attention_2`** board-grid run, which reproduces
 the screen (§4.1). (3) Absolute
 cross-method standing is modest (mid-pack on retrieval; a matched-ratio edge only on `fwe` aggregation);
-the large numbers are lifts *over the base press*, not over the field. (4) The LongBench gain at 0.5 is
-not significant, and H2 is mixed (refuted on RULER `vt`, §4.6); the method's value is clearest under
+the large numbers are lifts *over the base press*, not over the field. (4) H2 is mixed (refuted on RULER `vt`, §4.5); the method's value is clearest under
 aggressive compression and on aggregation/corroboration. (5) All systems measurements use HuggingFace `transformers`; under a paged
 allocator (vLLM / PagedAttention) a page is reclaimed only when every slot in it is free, so scattered
 eviction would not free memory proportionally and the iso-accuracy memory saving would not transfer directly.
@@ -407,8 +379,7 @@ eviction would not free memory proportionally and the iso-accuracy memory saving
 
 A training-free personalized-PageRank eviction scorer, anchored to a cheap base press and using an
 O(S·head_dim) low-rank kernel, **significantly and consistently beats its base press** on RULER
-retrieval/corroboration (all ratios) and on LongBench multi-hop QA (under aggressive compression), and
-also beats a GraphKV-style suppression baseline (§4.6); a `damping=0` floor recovers the base press's
+retrieval/corroboration (all ratios), and also beats a GraphKV-style suppression baseline (§4.5); a `damping=0` floor recovers the base press's
 ranking (empirically within noise of the base, Δ≈0). It is a **ranked entry on the public KVPress
 leaderboard**, mid-pack overall, with a matched-ratio 1st on `fwe` aggregation (§4.1). At
 **iso-accuracy** it runs on **1.6×–4.5× less KV cache and ~13–16 % lower peak GPU memory** than the base
@@ -423,6 +394,6 @@ RULER to expose the multi-hop/aggregation tasks; and an upstream kvpress leaderb
 ---
 
 *Reproduction:* `project/reproduction/README.md` (env, commands),
-`project/reproduction/scripts/sweep_longbench.py` (sweeps), `project/reproduction/analysis/analyze_paired.py` (paired stats),
+`project/reproduction/analysis/analyze_paired.py` (paired stats),
 `project/reproduction/results/` (per-run `config.yaml` + `metrics.json`). The press lives in
 `kvpress/presses/centrality_press.py`; see `project/reproduction/README.md` for the number → run-directory map.

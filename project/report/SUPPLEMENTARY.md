@@ -1,7 +1,7 @@
 # Supplementary Material, Centrality-Based KV-Cache Eviction
 
 Companion to the main report (`REPORT.pdf`): detailed per-press systems figures and per-task result
-tables. See the report §4.4–4.5 for the summary and interpretation.
+tables. See the report §4.3–4.4 for the summary and interpretation.
 
 ## S.1 Per-press systems figures
 
@@ -31,14 +31,6 @@ cheaper than `graphkv` / SnapKV-based presses.*
 | niah_multikey_2 | 100 | 4.8 | 81.0 | 61.9 | 100 | 0 |
 | niah_multikey_3 | 100 | 4.5 | 36.4 | 22.7 | 18.2 | 0 |
 | qa_2 | 58.1 | 32.3 | 48.4 | 48.4 | 48.4 | 29.0 |
-
-### LongBench multi-hop @ compression 0.5 (F1 %)
-
-| subtask | no_press | knorm | graphkv | snapkv | ppr d=0.15 |
-|---|---|---|---|---|---|
-| hotpotqa | 58.5 | 54.1 | 45.9 | 56.7 | 49.2 |
-| 2wikimqa | 53.1 | 45.9 | 46.7 | 53.5 | 53.4 |
-| musique | 30.7 | 19.5 | 30.9 | 25.2 | 23.4 |
 
 Per-run configs + metrics are under `project/reproduction/results/` (`config.yaml` + `metrics.json` each; the aggregated
 per-example `*_long.csv` are report-only, regenerable, see `project/reproduction/README.md`). Regenerate figures with
@@ -171,8 +163,7 @@ query-aware; **bold** = our entry; Δ vs uncompressed (95.69). Reproduce with `a
   `README.md`; unit test in `tests/presses/test_centrality_press.py`.
 - **GraphKV comparison baseline (`project/additional_benchmarks/`):** `decay_propagation_press.py`,
   `test_decay_propagation_press.py`, `run.py` (runtime-injected registry entry), `README.md`.
-- **Benchmark + analysis (`project/reproduction/`):** `scripts/sweep_longbench.py`,
-  `scripts/submission_grid_llama.py`, `scripts/fetch_eval_datasets.py`; `analysis/analyze_paired.py`,
+- **Benchmark + analysis (`project/reproduction/`):** `scripts/submission_grid_llama.py`, `scripts/fetch_eval_datasets.py`; `analysis/analyze_paired.py`,
   `analysis/make_figures.py`, `analysis/speed_memory.py`, `analysis/iso_systems.py`,
   `analysis/rank_vs_board.py`, `analysis/kvpress_leaderboard_raw.csv`.
 - **Data/logs (`project/reproduction/results/`):** `board_grid/` (with `predictions.csv`) and `ruler_screen/`

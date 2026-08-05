@@ -7,15 +7,15 @@ centrality over the key-similarity graph, anchored to `KnormPress` via a telepor
 ## Benchmark — one command
 ```bash
 pip install -e ".[eval]"                                # kvpress + evaluation deps (from pyproject.toml)
-python project/reproduction/scripts/benchmark.py        # RULER §4.1 + GraphKV §4.6 + LongBench §4.2, fraction 0.06 (fast)
+python project/reproduction/scripts/benchmark.py        # RULER §4.1 + GraphKV §4.5, fraction 0.06 (fast)
 ```
 (`MODEL=<hf-id> OUT=<dir> python …/benchmark.py` to override.) One command runs all the report's benchmarks:
 `evaluate.py` for RULER accuracy (centrality vs `no_press`/`knorm`/`snapkv`/`centrality_pure`),
-`additional_benchmarks/run.py` for the GraphKV suppressor, and `sweep_longbench.py` for multi-hop QA.
+`additional_benchmarks/run.py` for the GraphKV suppressor.
 
 ## Output & sample logs
 Each run writes a directory with `config.yaml` + `metrics.json` (`macro` = mean `string_match` over the 13
-RULER subtasks); LongBench writes `longbench_summary.json`. **Sample logs from our runs are committed under
+RULER subtasks). **Sample logs from our runs are committed under
 [`results/`](results/):** `board_grid/` (full-fraction, leaderboard-ready, with `predictions.csv`) and
 `ruler_screen/` (the fraction-0.06 screen). Every report RULER number maps to a run directory named
 `ruler__4096__<model>__<press>__<ratio>`.

@@ -6,7 +6,6 @@ absent — so this runs incrementally as sections are re-produced.
 
 Inputs expected (produced by the sibling scripts):
   ruler_results_long.csv / ruler_summary.json  (fig1, fig2, fig4, fig9, fig11)
-  longbench_summary.json                        (fig3)
   results_systems_bs8.csv                       (fig5, fig6, fig7, fig8)
   results_iso_systems_16k_bs8.csv               (fig10)
 
@@ -53,17 +52,6 @@ def fig1_ruler(rd, fg):  # RULER macro vs compression
     ax.legend(fontsize=6); _save(fig, fg, "fig1_ruler_accuracy_vs_compression.png")
 
 
-def fig3_longbench(rd, fg):
-    s = _load_json(rd, "longbench_summary.json")
-    if not s:
-        print("skip fig3 (no longbench_summary.json)"); return
-    fig, ax = plt.subplots(figsize=(5, 3.2))
-    for press, curve in s.items():
-        xs = sorted(float(r) for r in curve)
-        ax.plot(xs, [curve[str(x)] for x in xs], marker="o", label=press)
-    ax.set(xlabel="compression ratio", ylabel="LongBench multi-hop F1")
-    ax.legend(fontsize=6); _save(fig, fg, "fig3_longbench_f1.png")
-
 
 def _systems(rd, fg):
     df = _load_csv(rd, "results_systems_bs8.csv")
@@ -103,7 +91,7 @@ def main():
     ap.add_argument("--resultsdir", default="results")
     ap.add_argument("--figdir", default="report/figures")
     a = ap.parse_args()
-    for fn in (fig1_ruler, fig3_longbench, _systems, fig10_iso):
+    for fn in (fig1_ruler, _systems, fig10_iso):
         try:
             fn(a.resultsdir, a.figdir)
         except Exception as e:                       # never let one figure abort the rest

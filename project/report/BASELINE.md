@@ -11,8 +11,7 @@ family, …).
 (key norm, recent-query attention, expected attention, etc.) and the framework evicts the lowest-scoring
 `compression_ratio` fraction. The natural baseline for this project is `KnormPress` (keep low-L2-norm keys), keys-only, essentially free, and the framework's smooth default scorer.
 
-**Why chosen.** It is the de-facto standard harness for this task: a shared evaluation stack (RULER,
-LongBench, a public leaderboard, a tiny CPU unit-test model), so a new press can be benchmarked against
+**Why chosen.** It is the de-facto standard harness for this task: a shared evaluation stack (RULER, a public leaderboard, a tiny CPU unit-test model), so a new press can be benchmarked against
 many strong baselines under **identical workloads** with minimal glue. Its `ScorerPress` contract makes a
 new relational scorer a ~150-line drop-in, and its PR history merges external and even AI-authored scorers, so the contribution has a real upstream path.
 

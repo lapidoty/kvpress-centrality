@@ -89,7 +89,7 @@ def configure_sys_path(repo_root: Path) -> None:
 
     evaluate_registry.py does `from benchmarks.ruler.calculate_metrics import ...` (needs evaluation/
     on the path); the presses live in the top-level kvpress package (needs the repo root). Mirrors
-    additional_benchmarks/run.py and scripts/sweep_longbench.py.
+    additional_benchmarks/run.py.
     """
     for path in (str(repo_root / "evaluation"), str(repo_root)):
         if path not in sys.path:
