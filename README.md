@@ -32,7 +32,7 @@ the scoring linear in sequence length, so it drops into the existing kvpress eva
 | **§3** Test suite: workloads, latency/memory/throughput, hit-rate analog, scripts + CI | report §3.2, §4.4–4.6; [`reproduction/`](project/reproduction/) + [CI](.github/workflows/centrality-ci.yml) |
 | **§4** Extension: feature-branch code, unit tests, API/params | [`add-centrality-press`](../../tree/add-centrality-press) branch, [`tests/`](tests/presses); report §2.1 |
 | **§5** Evaluation: baseline vs extended, sweeps, ablation | report §4.1–4.5, ablation ladder §3.3 |
-| **§6** Reporting: clean repo, README + Dockerfile, 8–12pp PDF | this README, [`reproduction/Dockerfile`](project/reproduction/Dockerfile), [`REPORT.pdf`](project/report/REPORT.pdf) |
+| **§6** Reporting: clean repo, README install + benchmark, 8–12pp PDF | this README, [`reproduction/README.md`](project/reproduction/README.md), [`REPORT.pdf`](project/report/REPORT.pdf) |
 | **§7** Criteria: correctness / reproducibility / performance / clarity | throughout |
 
 ## Repository layout
@@ -54,8 +54,7 @@ kvpress-centrality/
 │   │   ├── README.md                      # how to benchmark (one command)
 │   │   ├── scripts/                       # benchmark.py, submission_grid_llama.py, sweep_longbench.py, fetch_eval_datasets.py
 │   │   ├── analysis/                      # rank_vs_board.py + the §4.2/4.4/4.5/4.6 regeneration scripts
-│   │   ├── results/                       # committed runs: config.yaml + metrics.json (+ predictions.csv)
-│   │   └── Dockerfile, requirements.txt   # pinned reproduction environment
+│   │   └── results/                       # committed runs: config.yaml + metrics.json (+ predictions.csv)
 │   └── additional_benchmarks/             # GraphKV suppression baseline (decay_propagation_press.py, run.py)
 │
 ├── README.md                              # this file
@@ -86,7 +85,7 @@ The sensitivity analysis (damping, teleport temperature) and honest caveats are 
 ## Quick start
 
 ```bash
-pip install -e .            # kvpress + eval deps (see project/reproduction/Dockerfile / project/reproduction/requirements.txt)
+pip install -e ".[eval]"     # kvpress + evaluation deps (from pyproject.toml)
 
 # reproduce the headline point (fraction-0.06 screen, ~30 examples/task, fast):
 cd evaluation

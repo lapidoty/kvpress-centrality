@@ -38,8 +38,8 @@ compare against a GraphKV-style redundancy *suppressor* on the same graph (§4.7
 
 **Contributions.** (1) `CentralityPress`, a training-free personalized-PageRank eviction scorer with an
 O(S·head_dim) low-rank kernel; (2) a paired, statistically-tested benchmark across RULER and LongBench,
-against baselines including a GraphKV-style suppressor; (3) a reproducible pack (pinned env, Dockerfile,
-sweep + analysis scripts, per-example logs).
+against baselines including a GraphKV-style suppressor; (3) a reproducible pack (one-command benchmark,
+sweep + analysis scripts, committed run logs).
 
 **Related work.** kvpress ships many independent-scoring `ScorerPress`es: `KnormPress` (keep low-L2-norm
 keys), `SnapKVPress` (recent-query attention), `ExpectedAttentionPress`, `TOVAPress`, `PyramidKVPress`,
@@ -94,8 +94,8 @@ sequence length**.
 - **Model:** `meta-llama/Llama-3.1-8B-Instruct` (bf16), 32 layers, 32 query / 8 KV heads (GQA),
   head_dim 128, the kvpress `evaluate.py` default.
 - **Hardware:** one NVIDIA A100-80GB.
-- **Stack:** Python 3.10, `torch==2.13.0+cu130`, `transformers==5.2.0`, `datasets==5.0.0`, kvpress
-  0.5.4. Pinned in `requirements.txt`; `Dockerfile` provided.
+- **Stack:** Python ≥3.10; `torch`, `transformers`, `datasets`, kvpress 0.5.4, installed with
+  `pip install -e ".[eval]"` (versions pinned by kvpress's `pyproject.toml`).
 
 ### 3.2 Benchmarks and metric
 
