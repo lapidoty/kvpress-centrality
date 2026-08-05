@@ -1,50 +1,43 @@
 # SPDX-License-Identifier: Apache-2.0
-"""Rank our press against the public KVPress leaderboard at MATCHED model + MATCHED ratio.
+"""Rank our press against the public KVPress leaderboard at matched model + matched ratio (Llama-3.1-8B).
 
-Inserts our fraction-0.06 per-subtask scores into the board's Llama per-ratio ranking (macro over the
-13 RULER subtasks -- the board's metric, at a single ratio, never averaged). To keep the comparison set
-identical across ratios, we rank only over the methods the board evaluates at ALL THREE ratios (plus ours).
-This reproduces the report's section 4.1 table: macro 8/11/12 of 20; fwe 1/1/9; cwe 18/15/15."""
+For each ratio we dedupe the board to the best score per method, insert our full-fraction scores (from
+`results/board_grid/`), and report where the base (Knorm) and our reinforced press land. Reproduces the
+report section 4.1 leaderboard table (rank jump 18->8, 21->14, 19->13, 18->11 at c=0.25/0.5/0.75/0.875) and
+the `fwe` 1st standing."""
 import glob
 import json
+from pathlib import Path
 
 import pandas as pd
 
-BOARD = "/home/lapidoty/kv-dev/kvpress_leaderboard_raw.csv"
-OURS_GLOB = "/home/lapidoty/kv-dev/eval_results/*centrality_ppr_knorm_d0.15__{r}__fraction0.060/metrics.json"
-SUB = [
-    "niah_single_1", "niah_single_2", "niah_single_3", "niah_multikey_1", "niah_multikey_2",
-    "niah_multikey_3", "niah_multiquery", "niah_multivalue", "vt", "cwe", "fwe", "qa_1", "qa_2",
-]
-CATS = {
-    "macro13": SUB,
-    "fwe": ["fwe"],
-    "cwe": ["cwe"],
-    "qa": ["qa_1", "qa_2"],
-    "niah_multikey": ["niah_multikey_1", "niah_multikey_2", "niah_multikey_3"],
-}
-RATIOS = [(0.25, "0.25"), (0.5, "0.50"), (0.75, "0.75")]
-
-board = pd.read_csv(BOARD)
-L = board[board.model == "meta-llama/Llama-3.1-8B-Instruct"]
-# Consistent comparison set: methods present at ALL three ratios (so the denominator does not move).
-present = {r: set(L[L.configured_ratio == r].press_name) for r, _ in RATIOS}
-common = present[0.25] & present[0.5] & present[0.75]
+HERE = Path(__file__).resolve().parent
+BOARD = HERE / "kvpress_leaderboard_raw.csv"
+GRID = str(HERE.parent / "results" / "board_grid" / "*centrality_ppr_knorm_d0.15__{r}" / "metrics.json")
+SUB = ["niah_single_1", "niah_single_2", "niah_single_3", "niah_multikey_1", "niah_multikey_2",
+       "niah_multikey_3", "niah_multiquery", "niah_multivalue", "vt", "cwe", "fwe", "qa_1", "qa_2"]
+CATS = {"macro13": SUB, "fwe": ["fwe"], "cwe": ["cwe"]}
+RATIOS = [(0.25, "0.25"), (0.5, "0.50"), (0.75, "0.75"), (0.875, "0.875")]
 
 
 def ours(rstr):
-    m = json.load(open(glob.glob(OURS_GLOB.format(r=rstr))[0]))
+    m = json.load(open(glob.glob(GRID.format(r=rstr))[0]))
     return {s: m[s]["string_match"] for s in SUB}
 
 
-print(f"comparison set: {len(common)} board methods present at all ratios  (+ours = {len(common) + 1})\n")
+board = pd.read_csv(BOARD)
+L = board[board.model == "meta-llama/Llama-3.1-8B-Instruct"]
 for r, rstr in RATIOS:
-    sub = L[(L.configured_ratio == r) & (L.press_name.isin(common))].drop_duplicates("press_name")
+    sub = L[L.configured_ratio == r].sort_values("score_macro13", ascending=False).drop_duplicates("press_name")
     o = ours(rstr)
-    print(f"=== ratio {r} ({len(sub) + 1} entries incl. ours) ===")
+    print(f"\n=== c={r}  ({len(sub) + 1} methods incl. ours) ===")
     for cat, cols in CATS.items():
-        scores = [row[cols].mean() for _, row in sub.iterrows()]
-        om = sum(o[s] for s in cols) / len(cols)
-        scores.append(om)
-        rank = sorted(range(len(scores)), key=lambda i: -scores[i]).index(len(scores) - 1) + 1
-        print(f"  {cat:14s} ours={om:5.1f}  rank {rank}/{len(scores)}")
+        scores = {row.pretty_name: row[cols].mean() for _, row in sub.iterrows()}
+        scores["+ centrality (ours)"] = sum(o[c] for c in cols) / len(cols)
+        ranked = sorted(scores.items(), key=lambda kv: -kv[1])
+        orr = next(i for i, (n, s) in enumerate(ranked, 1) if "ours" in n)
+        line = f"  {cat:8s} ours={scores['+ centrality (ours)']:5.1f}  rank {orr}/{len(ranked)}"
+        if cat == "macro13":
+            kr = next(i for i, (n, s) in enumerate(ranked, 1) if n == "Knorm")
+            line += f"   | base Knorm rank {kr} ({scores['Knorm']:.1f})  ->  +{scores['+ centrality (ours)'] - scores['Knorm']:.1f}"
+        print(line)

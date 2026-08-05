@@ -181,14 +181,14 @@ three ratios** (`rank_vs_board.py` regenerates them):
 | `cwe` (common-word extraction) | 18th | 15th | 15th |
 
 **Overall the press is mid-pack, it does not beat the field.** Its one genuine, matched-ratio edge is
-**frequent-word extraction (`fwe`), where it ranks 1st at c=0.25 and c=0.5** (98.9 / 97.8, above every board
-method, including uncompressed). Tellingly, the *other* aggregation task (`cwe`) is near the **bottom**
-(15th–18th), so the edge is **specifically FWE, not aggregation broadly**, plausibly because frequently-
+**frequent-word extraction (`fwe`), where it ranks 1st at c=0.25 and 2nd at c=0.5** (96.8 / 95.8, at or near
+the top of the board). Tellingly, the *other* aggregation task (`cwe`) is near the **bottom**
+(15th–20th), so the edge is **specifically FWE, not aggregation broadly**, plausibly because frequently-
 repeated tokens form dense clusters that graph propagation reinforces, whereas CWE offers no such structure.
 Two families that could look like strengths do **not** survive matched-ratio scrutiny and are dropped as averaging
 artifacts: QA is 2nd only at c=0.25 (13th–14th thereafter) and NIAH-multikey is mid-pack throughout (9th–12th).
-An independent count over the board methods evaluated at all three ratios gives **8th/11th/12th of 20**, the
-same mid-pack conclusion (full ranking below).
+An independent count over the board methods gives **8th/12th/13th/11th of 21**, the same mid-pack
+conclusion; the lift over the base is shown below.
 
 **Reproducibility.** Every number here is produced by kvpress's own `evaluate.py` + `calculate_metrics`. The
 headline table is a **fraction-0.06 screen** (≈30 examples/task, sdpa). A **full-fraction run (all 500
@@ -202,17 +202,19 @@ faithful, low-noise estimate; the full-fraction column is the leaderboard-grade 
 | c=0.75 | 58.3 | 58.0 |
 | c=0.875 | n/a | 41.7 |
 
-**Where this lands on the public leaderboard.** The full-fraction macro ranked against the Llama-3.1-8B
-methods the KVPress board evaluates at all three ratios (matched model + ratio; `analysis/rank_vs_board.py`):
+**Where this lands on the public leaderboard.** Ranked against the Llama-3.1-8B methods the KVPress board
+evaluates at each ratio (deduped, full-fraction macro; `analysis/rank_vs_board.py`), reinforcement lifts the
+base press from near the bottom of the field to mid-pack:
 
-| compression | ours (macro) | our rank | top method | base `knorm` |
+| compression | `knorm` (base) | + centrality | Δ | rank jump |
 |---|---|---|---|---|
-| 0.25 | 94.6 | 8 / 20 | AdaKVCompactor 95.7 | 76.3 (18th) |
-| 0.50 | 81.3 | 11 / 20 | DuoAttnOnTheFly 95.7 | 52.8 (19th) |
-| 0.75 | 58.0 | 12 / 20 | KVzip 95.2 | 30.3 (19th) |
+| 0.25 | 76.3 | 94.6 | +18.3 | 19th → 8th |
+| 0.50 | 52.8 | 81.3 | +28.5 | 20th → 12th |
+| 0.75 | 30.3 | 58.0 | +27.7 | 20th → 13th |
+| 0.875 | 21.2 | 41.7 | +20.5 | 19th → 11th |
 
-Mid-pack overall, but it lifts its base press from near the bottom of the field to the middle, and ranks
-**1st on `fwe`** aggregation at 0.25/0.5.
+Of 21 board methods (standing at submission; the public board is live, so `rank_vs_board.py` recomputes the
+current ranking). Mid-pack overall; **1st on `fwe`** at 0.25 (2nd at 0.5).
 
 ![RULER accuracy vs compression](figures/fig1_ruler_accuracy_vs_compression.png){width=70%}
 
