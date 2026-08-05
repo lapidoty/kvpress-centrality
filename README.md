@@ -31,6 +31,33 @@ the scoring linear in sequence length, so it drops into the existing kvpress eva
 | **§6** Reporting: clean repo, README + Dockerfile, 8–12pp PDF | this README, [`reproduction/Dockerfile`](project/reproduction/Dockerfile), [`REPORT.pdf`](project/report/REPORT.pdf) |
 | **§7** Criteria: correctness / reproducibility / performance / clarity | throughout |
 
+## Repository layout
+
+```text
+kvpress-centrality/
+├── kvpress/presses/centrality_press.py     # the extension: CentralityPress (a ScorerPress)
+│                                            #   (registered in kvpress/__init__.py + evaluation/evaluate_registry.py)
+├── tests/presses/test_centrality_press.py  # unit + end-to-end tests
+├── evaluation/                             # upstream kvpress evaluation harness (unmodified)
+│
+├── project/                               # ── all project deliverables ──
+│   ├── report/
+│   │   ├── REPORT.pdf / .md               # the report
+│   │   ├── BASELINE.pdf / .md             # §2 "Selection of Baseline Framework"
+│   │   ├── SUPPLEMENTARY.pdf / .md        # per-task tables + systems figures
+│   │   └── figures/                       # fig1–fig12
+│   ├── reproduction/
+│   │   ├── README.md                      # how to benchmark (one command)
+│   │   ├── scripts/                       # benchmark.py, submission_grid_llama.py, sweep_longbench.py, fetch_eval_datasets.py
+│   │   ├── analysis/                      # rank_vs_board.py + the §4.2/4.4/4.5/4.6 regeneration scripts
+│   │   ├── results/                       # committed runs: config.yaml + metrics.json (+ predictions.csv)
+│   │   └── Dockerfile, requirements.txt   # pinned reproduction environment
+│   └── additional_benchmarks/             # GraphKV suppression baseline (decay_propagation_press.py, run.py)
+│
+├── README.md                              # this file
+└── UPSTREAM_README.md                     # NVIDIA/kvpress README, preserved verbatim
+```
+
 ## Headline result
 
 RULER (4k context, Llama-3.1-8B-Instruct, 13-task macro `string_match`), fraction-0.06 screen
