@@ -213,8 +213,8 @@ base press from near the bottom of the field to mid-pack:
 | 0.75 | 30.3 | 58.0 | +27.7 | 20th → 13th |
 | 0.875 | 21.2 | 41.7 | +20.5 | 19th → 11th |
 
-Of 21 board methods (standing at submission; the public board is live, so `rank_vs_board.py` recomputes the
-current ranking). Mid-pack overall; **1st on `fwe`** at 0.25 (2nd at 0.5).
+Of 21 board methods at submission; `rank_vs_board.py` reproduces this from the committed board snapshot (the
+public board grows over time). Mid-pack overall; **1st on `fwe`** at 0.25 (2nd at 0.5).
 
 ![RULER accuracy vs compression](figures/fig1_ruler_accuracy_vs_compression.png){width=70%}
 

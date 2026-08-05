@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: Apache-2.0
 """Rank our press against the public KVPress leaderboard at matched model + matched ratio (Llama-3.1-8B).
 
-For each ratio we dedupe the board to the best score per method, insert our full-fraction scores (from
-`results/board_grid/`), and report where the base (Knorm) and our reinforced press land. Reproduces the
-report section 4.1 leaderboard table (rank jump 18->8, 21->14, 19->13, 18->11 at c=0.25/0.5/0.75/0.875) and
-the `fwe` 1st standing."""
+For each ratio we rank every board entry (`kvpress_leaderboard_raw.csv`, the submission-time board snapshot),
+insert our full-fraction scores (from `results/board_grid/`), and report where the base (Knorm) and our
+reinforced press land. Reproduces the report section 4.1 leaderboard table: rank jump 19->8, 20->12, 20->13,
+19->11 at c=0.25/0.5/0.75/0.875, and `fwe` 1st at 0.25 (2nd at 0.5)."""
 import glob
 import json
 from pathlib import Path
@@ -28,16 +28,17 @@ def ours(rstr):
 board = pd.read_csv(BOARD)
 L = board[board.model == "meta-llama/Llama-3.1-8B-Instruct"]
 for r, rstr in RATIOS:
-    sub = L[L.configured_ratio == r].sort_values("score_macro13", ascending=False).drop_duplicates("press_name")
+    sub = L[L.configured_ratio == r]
     o = ours(rstr)
-    print(f"\n=== c={r}  ({len(sub) + 1} methods incl. ours) ===")
+    print(f"\n=== c={r}  ({len(sub) + 1} board entries incl. ours) ===")
     for cat, cols in CATS.items():
-        scores = {row.pretty_name: row[cols].mean() for _, row in sub.iterrows()}
-        scores["+ centrality (ours)"] = sum(o[c] for c in cols) / len(cols)
-        ranked = sorted(scores.items(), key=lambda kv: -kv[1])
+        field = [(row.pretty_name, row[cols].mean()) for _, row in sub.iterrows()]
+        om = sum(o[c] for c in cols) / len(cols)
+        ranked = sorted(field + [("+ centrality (ours)", om)], key=lambda kv: -kv[1])
         orr = next(i for i, (n, s) in enumerate(ranked, 1) if "ours" in n)
-        line = f"  {cat:8s} ours={scores['+ centrality (ours)']:5.1f}  rank {orr}/{len(ranked)}"
+        line = f"  {cat:8s} ours={om:5.1f}  rank {orr}/{len(ranked)}"
         if cat == "macro13":
             kr = next(i for i, (n, s) in enumerate(ranked, 1) if n == "Knorm")
-            line += f"   | base Knorm rank {kr} ({scores['Knorm']:.1f})  ->  +{scores['+ centrality (ours)'] - scores['Knorm']:.1f}"
+            kn = next(s for n, s in field if n == "Knorm")
+            line += f"   | base Knorm rank {kr} ({kn:.1f})  ->  +{om - kn:.1f}"
         print(line)
