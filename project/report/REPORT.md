@@ -167,42 +167,8 @@ collapses on NIAH under compression and reinforcement repairs it (e.g. NIAH-mult
 `damping=0` reproduces the base (floor); `damping ≥ 0.5` and pure centrality collapse (pure = 28.2 /
 10.4 / 5.1 macro).
 
-**Cross-method standing (verified against the board's raw data, matched model + matched ratio).** Using the
-leaderboard's own 174-run backing data (`kvpress_leaderboard_raw.csv`, Llama-3.1-8B, RULER 4k), we insert our
-fraction-0.06 scores into the per-ratio ranking (macro over 13 subtasks, the board's metric, computed at a
-*single* ratio, never averaged). Ranks below are over the **20 methods (incl. ours) the board evaluates at all
-three ratios** (`rank_vs_board.py` regenerates them):
-
-| rank of `ppr_knorm` d=0.15 | c=0.25 | c=0.5 | c=0.75 |
-|---|---|---|---|
-| **macro (overall)** | 8th / 20 | 11th / 20 | 12th / 20 |
-| `fwe` (frequent-word extraction) | **1st** | **1st** | 9th |
-| `cwe` (common-word extraction) | 18th | 15th | 15th |
-
-**Overall the press is mid-pack, it does not beat the field.** Its one genuine, matched-ratio edge is
-**frequent-word extraction (`fwe`), where it ranks 1st at c=0.25 and 2nd at c=0.5** (96.8 / 95.8, at or near
-the top of the board). Tellingly, the *other* aggregation task (`cwe`) is near the **bottom**
-(15th–20th), so the edge is **specifically FWE, not aggregation broadly**, plausibly because frequently-
-repeated tokens form dense clusters that graph propagation reinforces, whereas CWE offers no such structure.
-Two families that could look like strengths do **not** survive matched-ratio scrutiny and are dropped as averaging
-artifacts: QA is 2nd only at c=0.25 (13th–14th thereafter) and NIAH-multikey is mid-pack throughout (9th–12th).
-An independent count over the board methods gives **8th/12th/13th/11th of 21**, the same mid-pack
-conclusion; the lift over the base is shown below.
-
-**Reproducibility.** Every number here is produced by kvpress's own `evaluate.py` + `calculate_metrics`. The
-headline table is a **fraction-0.06 screen** (≈30 examples/task, sdpa). A **full-fraction run (all 500
-examples/task) with `flash_attention_2`** at the board grid reproduces it within ~1 point, so the screen is a
-faithful, low-noise estimate; the full-fraction column is the leaderboard-grade result:
-
-| `centrality_ppr_knorm` d=0.15 | screen (fraction 0.06) | full (fraction 1.0) |
-|---|---|---|
-| c=0.25 | 94.5 | 94.6 |
-| c=0.50 | 82.4 | 81.3 |
-| c=0.75 | 58.3 | 58.0 |
-| c=0.875 | n/a | 41.7 |
-
 **Where this lands on the public leaderboard.** Ranked against the Llama-3.1-8B methods the KVPress board
-evaluates at each ratio (deduped, full-fraction macro; `analysis/rank_vs_board.py`), reinforcement lifts the
+evaluates at each ratio (full-fraction macro; `analysis/rank_vs_board.py`), reinforcement lifts the
 base press from near the bottom of the field to mid-pack:
 
 | compression | `knorm` (base) | + centrality | Δ | rank jump |
@@ -212,14 +178,13 @@ base press from near the bottom of the field to mid-pack:
 | 0.75 | 30.3 | 58.0 | +27.7 | 20th → 13th |
 | 0.875 | 21.2 | 41.7 | +20.5 | 19th → 11th |
 
-Of 21 board methods at submission; `rank_vs_board.py` reproduces this from the committed board snapshot (the
-public board grows over time). Mid-pack overall; **1st on `fwe`** at 0.25 (2nd at 0.5).
+Mid-pack overall; the full 21-method board ranking (all four ratios) is in the supplementary (§S.4).
 
 ![RULER accuracy vs compression](figures/fig1_ruler_accuracy_vs_compression.png){width=70%}
 
 *Figure 1: RULER macro accuracy (all 13 tasks, kvpress library scorer, **fraction 0.06 screen**) vs.
 compression. `ppr_knorm` d=0.15 (ours) dominates its base and the other baselines shown; not a
-leaderboard-eligible comparison (see cross-method note).*
+leaderboard-eligible comparison.*
 
 ![Damping sweet spot](figures/fig2_damping_curve.png){width=70%}
 
