@@ -56,8 +56,7 @@ outlier-eviction and spectral-localization pathologies of raw eigenvector centra
 ### 2.1 CentralityPress (reinforcement)
 
 Let `K ∈ R^{S×D}` be the (per batch, per kv-head) key matrix and `Kₙ` its L2-normalized rows. Define
-the similarity graph `A[i,j] = (1 + cos(kᵢ,kⱼ))/2 ∈ [0,1]` (the "shifted" kernel; non-negative, which
-keeps the dynamics Perron–Frobenius-friendly). Personalized PageRank iterates
+the similarity graph `A[i,j] = (1 + cos(kᵢ,kⱼ))/2 ∈ [0,1]` (the "shifted" kernel; non-negative). Personalized PageRank iterates
 
 $$c \leftarrow \text{damping} \cdot \text{normalize}(A c) + (1 - \text{damping}) p \quad \text{where} \quad p = \text{softmax}(\text{base score} / \tau)$$
 
