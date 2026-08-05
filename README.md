@@ -29,7 +29,7 @@ the scoring linear in sequence length, so it drops into the existing kvpress eva
 | Brief section | Where |
 |---|---|
 | **§2** Baseline justification | [`report/BASELINE.pdf`](project/report/BASELINE.pdf) |
-| **§3** Test suite: workloads, latency/memory/throughput, hit-rate analog, scripts + CI | report §3.2, §4.4–4.6; [`reproduction/`](project/reproduction/) + [CI](.github/workflows/centrality-ci.yml) |
+| **§3** Test suite: workloads, latency/memory/throughput, scripts + CI | report §3.2, §4.4–4.5; [`reproduction/`](project/reproduction/) + [CI](.github/workflows/centrality-ci.yml) |
 | **§4** Extension: feature-branch code, unit tests, API/params | [`add-centrality-press`](../../tree/add-centrality-press) branch, [`tests/`](tests/presses); report §2.1 |
 | **§5** Evaluation: baseline vs extended, sweeps, ablation | report §4.1–4.5, ablation ladder §3.3 |
 | **§6** Reporting: clean repo, README install + benchmark, 8–12pp PDF | this README, [`reproduction/README.md`](project/reproduction/README.md), [`REPORT.pdf`](project/report/REPORT.pdf) |
@@ -49,7 +49,7 @@ kvpress-centrality/
 │   │   ├── REPORT.pdf / .md               # the report
 │   │   ├── BASELINE.pdf / .md             # §2 "Selection of Baseline Framework"
 │   │   ├── SUPPLEMENTARY.pdf / .md        # per-task tables + systems figures
-│   │   └── figures/                       # fig1–fig12
+│   │   └── figures/                       # fig1–fig11
 │   ├── reproduction/
 │   │   ├── README.md                      # how to benchmark (one command)
 │   │   ├── scripts/                       # benchmark.py, submission_grid_llama.py, sweep_longbench.py, fetch_eval_datasets.py
@@ -78,7 +78,7 @@ column within ~1 point (94.6 / 81.3 / 58.0; see [`project/reproduction/results/b
 The sensitivity analysis (damping, teleport temperature) and honest caveats are in the report.
 
 > **Scope.** The RULER numbers above are reproducible from the committed run configs. The LongBench
-> (report §4.2) and the systems / iso-accuracy / attention-recall analyses (report §4.4-4.6) are reported
+> (report §4.2) and the systems / iso-accuracy analyses (report §4.4-4.5) are reported
 > from the project's runs, with the scripts that regenerate them included. See
 > [`project/reproduction/README.md`](project/reproduction/README.md).
 

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-"""Regenerate the report figures (fig1..fig12) from the result files (REPORT.md §4 captions).
+"""Regenerate the report figures (fig1..fig11) from the result files (REPORT.md §4 captions).
 
 Each figure reads its input CSV/JSON from --resultsdir and is skipped (with a warning) if the input is
 absent — so this runs incrementally as sections are re-produced.
@@ -9,7 +9,6 @@ Inputs expected (produced by the sibling scripts):
   longbench_summary.json                        (fig3)
   results_systems_bs8.csv                       (fig5, fig6, fig7, fig8)
   results_iso_systems_16k_bs8.csv               (fig10)
-  results_attention_recall.csv                  (fig12)
 
 Usage: python analysis/make_figures.py --resultsdir results/ --figdir report/figures/
 """
@@ -87,16 +86,6 @@ def _systems(rd, fg):
         _save(fig, fg, "fig8_gpu_util.png")
 
 
-def fig12_recall(rd, fg):
-    df = _load_csv(rd, "results_attention_recall.csv")
-    if df is None:
-        print("skip fig12 (no results_attention_recall.csv)"); return
-    fig, ax = plt.subplots(figsize=(5, 3.2))
-    for press, g in df.groupby("press"):
-        ax.plot(g["ratio"], g["recall"], marker="o", label=press)
-    ax.set(xlabel="compression ratio", ylabel="attention recall (%)")
-    ax.legend(fontsize=6); _save(fig, fg, "fig12_attention_recall.png")
-
 
 def fig10_iso(rd, fg):
     df = _load_csv(rd, "results_iso_systems_16k_bs8.csv")
@@ -114,7 +103,7 @@ def main():
     ap.add_argument("--resultsdir", default="results")
     ap.add_argument("--figdir", default="report/figures")
     a = ap.parse_args()
-    for fn in (fig1_ruler, fig3_longbench, _systems, fig12_recall, fig10_iso):
+    for fn in (fig1_ruler, fig3_longbench, _systems, fig10_iso):
         try:
             fn(a.resultsdir, a.figdir)
         except Exception as e:                       # never let one figure abort the rest

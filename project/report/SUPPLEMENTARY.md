@@ -174,9 +174,9 @@ query-aware; **bold** = our entry; Δ vs uncompressed (95.69). Reproduce with `a
 - **Benchmark + analysis (`project/reproduction/`):** `scripts/sweep_longbench.py`,
   `scripts/submission_grid_llama.py`, `scripts/fetch_eval_datasets.py`; `analysis/analyze_paired.py`,
   `analysis/make_figures.py`, `analysis/speed_memory.py`, `analysis/iso_systems.py`,
-  `analysis/recall_probe.py`, `analysis/rank_vs_board.py`, `analysis/kvpress_leaderboard_raw.csv`.
+  `analysis/rank_vs_board.py`, `analysis/kvpress_leaderboard_raw.csv`.
 - **Data/logs (`project/reproduction/results/`):** `board_grid/` (with `predictions.csv`) and `ruler_screen/`
-  run directories (each with `config.yaml` + `metrics.json`); figures in `report/figures/` (`fig1`–`fig12`).
+  run directories (each with `config.yaml` + `metrics.json`); figures in `report/figures/` (`fig1`–`fig11`).
 - **Reproducibility:** `pip install -e ".[eval]"`, `README.md` (how-to-benchmark + traceability),
   `scripts/benchmark.py` (one-command benchmark), `.github/workflows/centrality-ci.yml`
   (CI: comparison-benchmark tests on every push).

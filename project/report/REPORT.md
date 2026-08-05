@@ -33,7 +33,7 @@ leading eigenvector piles onto the single densest cluster, keeping near-duplicat
 low centrality and is dropped (exactly the tokens `LeverageScorePress` deliberately keeps). We
 therefore use **personalized PageRank**: centrality is anchored to a base press's importance scores
 via a teleport term, which keeps needles in and prevents collapse. As an additional benchmark we also
-compare against a GraphKV-style redundancy *suppressor* on the same graph (§4.7; code in
+compare against a GraphKV-style redundancy *suppressor* on the same graph (§4.6; code in
 `project/additional_benchmarks/`).
 
 **Contributions.** (1) `CentralityPress`, a training-free personalized-PageRank eviction scorer with an
@@ -161,7 +161,7 @@ mean over all 13 tasks (the leaderboard metric). Every number in this section is
 | `centrality_pure` (d=1) | 28.2 | 10.4 | 5.1 |
 
 On the full 13-task set, `centrality_ppr_knorm` d=0.15 **significantly beats its own base (`knorm`) and
-SnapKV at every compression ratio** (the head-to-head vs the GraphKV suppressor is in §4.7), and at 25 % compression
+SnapKV at every compression ratio** (the head-to-head vs the GraphKV suppressor is in §4.6), and at 25 % compression
 nearly matches full cache (94.5 vs 95.25). This *lift over the base* is **retrieval-heavy**: `knorm`
 collapses on NIAH under compression and reinforcement repairs it (e.g. NIAH-multikey 13.1 → 69.4 at c=0.5).
 `damping=0` reproduces the base (floor); `damping ≥ 0.5` and pure centrality collapse (pure = 28.2 /
@@ -202,7 +202,7 @@ above the base press; as d→1 (pure centrality) it collapses; d→0 recovers th
 
 On real multi-hop QA the reinforcement benefit **grows with compression**: at mild 0.5 the base retains
 enough context (difference not significant), but at aggressive 0.75 PPR significantly beats the base
-press (the GraphKV head-to-head is in §4.7).
+press (the GraphKV head-to-head is in §4.6).
 
 ![LongBench F1 vs compression](figures/fig3_longbench_f1.png){width=70%}
 
@@ -213,7 +213,7 @@ aggressive compression (0.75).*
 
 H1, that a training-free centrality press is viable and O(S·head_dim) efficient, is established by
 construction and the linear-kernel analysis in §2–§3. The reinforcement-vs-suppression hypotheses
-(H2, H3) are stated and tested in §4.7.
+(H2, H3) are stated and tested in §4.6.
 
 ### 4.4 Systems: memory, latency, throughput, GPU utilization
 
@@ -238,16 +238,15 @@ Every press at r=0.5 uses the same 4096 MB / 35.1 GB and runs at ~the same laten
 (Figs S2–S3), memory and speed are functions of the *ratio*, not the policy. What differs is prefill
 overhead (Fig S1): **`ppr_knorm` (+0.18 s over `no_press`) is as cheap as `knorm` (+0.19 s)**, the
 low-rank kernel makes the PageRank iterations essentially free, and *cheaper* than every SnapKV-based
-press (+0.33–0.39 s, attention compute); its prefill edge over the GraphKV suppressor is noted in §4.7. Across the ratio
+press (+0.33–0.39 s, attention compute); its prefill edge over the GraphKV suppressor is noted in §4.6. Across the ratio
 sweep, peak memory falls **39.1 → 37.1 → 35.1 → 33.1 GB** and GPU utilization **75 → 64 → 56 → 45 %** as
 compression rises 0 → 0.75 (less attention compute per token), while decode throughput stays ~flat
 (~170–185 tok/s): at 8B/8k decode is weight-bound, so the latency/throughput benefit would grow at
 longer context or larger batch, where the KV cache dominates decode.
 
 *Cache hit rate* is not defined for prefill KV eviction, there is no cross-request cache, hence no
-hit/miss; the meaningful analogs are **retention accuracy** (Fig 4): how much task accuracy survives at a
-given cache budget, and **attention recall** (§4.6): the share of the model's real attention mass that the
-kept set captures, which, tellingly, our press does *not* maximise. *CPU utilization* is negligible, the
+hit/miss; the meaningful analog is **retention accuracy** (Fig 4): how much task accuracy survives at a
+given cache budget. *CPU utilization* is negligible, the
 workload is GPU-bound.
 
 Per-press systems figures, prefill overhead, decode-latency percentiles, memory/throughput and GPU
@@ -316,44 +315,7 @@ large and robust (KV cache 39–78 %, peak GPU 13–16 %). Right, decode through
 (±5 %, within noise) because decode is weight-bound at 8B/16k/bs8; the speed win materializes in more
 KV-bound regimes.*
 
-### 4.6 Attention recall, the "hit-rate" analog
-
-Prefill eviction has no cross-request cache, so there is no literal hit/miss (§4.4). The closest analog in
-the eviction literature is **attention recall**: on a *full, uncompressed* cache, what fraction of the
-attention mass the model actually places on the context lands on the tokens a press keeps. We measured it
-directly on real RULER prompts, full-cache eager attention from the last-32 observation-window queries,
-reduced per KV-head, fraction on each press's kept set, averaged over 14 prompts × 32 layers × 8 heads
-(`analysis/recall_probe.py`, `results/results_attention_recall.csv`).
-
-| press | recall r=0.25 | r=0.5 | r=0.75 | RULER acc. at 0.5 |
-|---|---|---|---|---|
-| `snapkv` | 99.3 | 97.8 | 94.8 | 61.6 |
-| `knorm` (base) | 97.9 | 94.2 | 87.9 | 41.7 |
-| **`ppr_knorm` d0.15 (ours)** | 94.8 | 90.2 | 83.8 | **78.2** |
-| `centrality_pure` | 67.9 | 63.9 | 60.9 | 5.2 |
-
-**We did not improve attention recall, and that is exactly the point.** Our press has *lower* recall than
-its base `knorm` and than `snapkv`, yet ~2× their accuracy (78.2 vs 41.7 / 61.6 at r=0.5). Across the
-accuracy-capable presses recall and accuracy are **anti-correlated at the top**: the recall order is
-`snapkv` > `knorm` > ours, but the accuracy order is ours > `snapkv` > `knorm`. `snapkv`/`knorm` maximise
-recall by keeping the high-mass attention **sinks and recent tokens**, but those are not what retrieval
-needs. The needle is a **low-attention outlier** (little mass until the question is resolved), so a policy
-that chases total attention mass banks the easy 94–98 % and drops the critical few percent that sit on the
-needle; our press instead spends a little recall to keep the needle *and* its supporting context, which is
-why it wins the task. (`centrality_pure` is low on both, it piles onto the dense redundant cluster,
-missing the needle *and* much of the mass.) So a literal **cache-hit-rate improvement is not a claim we
-can, or should, make**: hit rate rewards keeping what the model *already* attends to; the value of this
-press is keeping what it will *need* to attend to.
-
-![Attention recall vs compression](figures/fig12_attention_recall.png){width=65%}
-*Figure 7: Attention recall (share of full-cache attention mass captured by the kept set) vs compression,
-on real RULER prompts. The attention/norm presses (`snapkv`, `knorm`) score highest but are not the most
-accurate (§4.1); ours keeps slightly less mass yet is far more accurate, the needle is a low-attention
-outlier, so recall is the wrong objective for retrieval.*
-
----
-
-### 4.7 GraphKV comparison (additional benchmark)
+### 4.6 GraphKV comparison (additional benchmark)
 
 The natural relational alternative to reinforcement is **suppression**: `CentralityPress` *adds*
 `damping·A·c` to keep a corroborated core, whereas a GraphKV-style press (arXiv:2509.00388)
@@ -413,13 +375,6 @@ localizes on the densest (most redundant) cluster, and the outlier needle, low c
 construction, is evicted. `d≥0.5` and `pure` (d=1) collapse to near-zero on single-needle. The clean
 unimodal damping curve (base at d=0, peak at d≈0.15, collapse by d=0.5) is the method's empirical signature.
 
-**Attention recall is the wrong target.** The presses with the *highest* attention recall (`snapkv`,
-`knorm`) are not the most accurate; ours wins with slightly *lower* recall (§4.6). Retrieval hinges on a
-few low-attention outlier tokens, the needle and its support, not on the high-mass attention sinks and
-recent tokens that dominate recall, so "keep what the model is looking at" is both easy and beside the
-point. This is the same outlier intuition that motivates the teleport anchor, seen from the systems side, 
-and it is why we do not, and should not, frame the result as a cache-hit-rate win.
-
 **A negative finding: SnapKV as a teleport base.** SnapKV force-sets its recent-window scores to the
 maximum; z-scoring then makes the teleport pile onto the last tokens and starve mid-context needles, so
 `centrality_ppr_snapkv` collapses even with `standardize_teleport`. KnormPress (smooth, no spike) is
@@ -441,7 +396,7 @@ leaderboard-eligible version is the **full-fraction `flash_attention_2`** board-
 the screen (§4.1). (3) Absolute
 cross-method standing is modest (mid-pack on retrieval; a matched-ratio edge only on `fwe` aggregation);
 the large numbers are lifts *over the base press*, not over the field. (4) The LongBench gain at 0.5 is
-not significant, and H2 is mixed (refuted on RULER `vt`, §4.7); the method's value is clearest under
+not significant, and H2 is mixed (refuted on RULER `vt`, §4.6); the method's value is clearest under
 aggressive compression and on aggregation/corroboration. (5) All systems measurements use HuggingFace `transformers`; under a paged
 allocator (vLLM / PagedAttention) a page is reclaimed only when every slot in it is free, so scattered
 eviction would not free memory proportionally and the iso-accuracy memory saving would not transfer directly.
@@ -453,7 +408,7 @@ eviction would not free memory proportionally and the iso-accuracy memory saving
 A training-free personalized-PageRank eviction scorer, anchored to a cheap base press and using an
 O(S·head_dim) low-rank kernel, **significantly and consistently beats its base press** on RULER
 retrieval/corroboration (all ratios) and on LongBench multi-hop QA (under aggressive compression), and
-also beats a GraphKV-style suppression baseline (§4.7); a `damping=0` floor recovers the base press's
+also beats a GraphKV-style suppression baseline (§4.6); a `damping=0` floor recovers the base press's
 ranking (empirically within noise of the base, Δ≈0). It is a **ranked entry on the public KVPress
 leaderboard**, mid-pack overall, with a matched-ratio 1st on `fwe` aggregation (§4.1). At
 **iso-accuracy** it runs on **1.6×–4.5× less KV cache and ~13–16 % lower peak GPU memory** than the base
