@@ -1,8 +1,12 @@
 # CentralityPress: personalized-PageRank KV-cache eviction
 
 A training-free KV-cache eviction policy for [NVIDIA kvpress](https://github.com/NVIDIA/kvpress), developed
-as a fork (Apache-2.0). Everything except the new press and this project's material is upstream and
-unmodified.
+as a fork (Apache-2.0). **Our changes to upstream:** the new press
+[`kvpress/presses/centrality_press.py`](kvpress/presses/centrality_press.py) (registered in
+`kvpress/__init__.py`, `evaluation/evaluate_registry.py`, `tests/default_presses.py`), its tests in
+[`tests/presses/test_centrality_press.py`](tests/presses/test_centrality_press.py), and the
+[`project/`](project/) folder (report, reproduction, comparison baseline). Everything else is upstream and
+unchanged.
 
 ## What's new
 

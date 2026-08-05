@@ -187,13 +187,32 @@ method, including uncompressed). Tellingly, the *other* aggregation task (`cwe`)
 repeated tokens form dense clusters that graph propagation reinforces, whereas CWE offers no such structure.
 Two families that could look like strengths do **not** survive matched-ratio scrutiny and are dropped as averaging
 artifacts: QA is 2nd only at c=0.25 (13th–14th thereafter) and NIAH-multikey is mid-pack throughout (9th–12th).
-An independent all-methods-per-ratio count gives 9th/12th/13th of 21, the same mid-pack conclusion.
+An independent count over the board methods evaluated at all three ratios gives **8th/11th/12th of 20**, the
+same mid-pack conclusion (full ranking below).
 
-**Reproducibility.** Every number here is produced by kvpress's own `evaluate.py` + `calculate_metrics`. The headline table is a **fraction-0.06 screen** (≈30/task, sdpa); a
-**full-fraction run with `flash_attention_2`** at the board grid reproduces it closely (c=0.25: **94.57** vs
-94.5; c=0.75: **58.04** vs 58.3), confirming the screen is a faithful estimate and the harness is
-board-comparable. Those full-fraction FA2 numbers, at the board grid {0.25, 0.5, 0.75, 0.875}, are the basis
-for a leaderboard submission.
+**Reproducibility.** Every number here is produced by kvpress's own `evaluate.py` + `calculate_metrics`. The
+headline table is a **fraction-0.06 screen** (≈30 examples/task, sdpa). A **full-fraction run (all 500
+examples/task) with `flash_attention_2`** at the board grid reproduces it within ~1 point, so the screen is a
+faithful, low-noise estimate; the full-fraction column is the leaderboard-grade result:
+
+| `centrality_ppr_knorm` d=0.15 | screen (fraction 0.06) | full (fraction 1.0) |
+|---|---|---|
+| c=0.25 | 94.5 | 94.6 |
+| c=0.50 | 82.4 | 81.3 |
+| c=0.75 | 58.3 | 58.0 |
+| c=0.875 | n/a | 41.7 |
+
+**Where this lands on the public leaderboard.** The full-fraction macro ranked against the Llama-3.1-8B
+methods the KVPress board evaluates at all three ratios (matched model + ratio; `analysis/rank_vs_board.py`):
+
+| compression | ours (macro) | our rank | top method | base `knorm` |
+|---|---|---|---|---|
+| 0.25 | 94.6 | 8 / 20 | AdaKVCompactor 95.7 | 76.3 (18th) |
+| 0.50 | 81.3 | 11 / 20 | DuoAttnOnTheFly 95.7 | 52.8 (19th) |
+| 0.75 | 58.0 | 12 / 20 | KVzip 95.2 | 30.3 (19th) |
+
+Mid-pack overall, but it lifts its base press from near the bottom of the field to the middle, and ranks
+**1st on `fwe`** aggregation at 0.25/0.5.
 
 ![RULER accuracy vs compression](figures/fig1_ruler_accuracy_vs_compression.png){width=70%}
 
